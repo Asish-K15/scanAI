@@ -1,0 +1,4 @@
+dataset_name,source,url,license,download_date,notes
+"Dog And Cat Skin Disease Identification 2",Roboflow,https://universe.roboflow.com/kendys-workspace/dog-and-cat-skin-disease-identification-2,CC BY 4.0,2026-07-30,"6141 images 10 classes, primary skin-disease source"
+"Cattle diseases datasets",Kaggle,https://www.kaggle.com/datasets/devang03mgr/cattle-diseases-datasets,VERIFY,,
+"Pet Disease images",Kaggle,https://www.kaggle.com/datasets/smadive/pet-disease-images,VERIFY,,

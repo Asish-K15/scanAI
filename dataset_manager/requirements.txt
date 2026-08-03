@@ -1,0 +1,7 @@
+kaggle
+roboflow
+imagehash
+Pillow
+pandas
+tqdm
+opencv-python-headless

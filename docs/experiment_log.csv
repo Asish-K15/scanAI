@@ -1,0 +1,1 @@
+experiment_id,date,model,learning_rate,batch_size,epochs,augmentation,accuracy,precision,recall,f1,auc,notes

@@ -1,0 +1,70 @@
+{
+  "_comment": "Master taxonomy for VetVision/PetVision AI. Every raw dataset's class names get mapped through this file. Edit the alias lists as you discover new label spellings in new datasets — do NOT rename folders by hand.",
+
+  "skin": {
+    "ringworm":              ["ringworm", "dermatophytosis", "fungal_ringworm", "tinea", "fu-ringworm"],
+    "mange":                 ["mange", "demodicosis", "demodex", "sarcoptic_mange"],
+    "scabies":               ["scabies"],
+    "pyoderma":               ["pyoderma", "bacterial_dermatosis", "bacterial_dermatitis"],
+    "hotspot":                ["hotspot", "hot_spot", "hot spots", "acute_moist_dermatitis"],
+    "fungal_infection":        ["fungal_infection", "fungal_infections", "fungal infection"],
+    "allergic_dermatitis":     ["allergic_dermatitis", "skin_allergy", "hypersensitivity", "flea_allergy_dermatitis", "flea allergy"],
+    "healthy_skin":            ["healthy_skin", "healthy skin", "normal_skin", "healthy"]
+  },
+
+  "parasites": {
+    "tick_infestation":  ["tick", "ticks", "tick_infestation", "tick infestation", "ectoparasite_infestation"],
+    "flea_infestation":  ["flea", "fleas", "flea_infestation", "flea infestation"],
+    "ear_mites":         ["ear_mites", "ear mites", "otodectes"]
+  },
+
+  "eye": {
+    "pink_eye":      ["pink_eye", "pinkeye", "infectious_bovine_keratoconjunctivitis", "ibk"],
+    "cherry_eye":    ["cherry_eye", "cherry eye"],
+    "eye_infection": ["eye_infection", "conjunctivitis", "eye infection"],
+    "healthy_eye":   ["healthy_eye", "normal_eye", "healthy"]
+  },
+
+  "ear": {
+    "ear_infection_external": ["ear_redness", "ear_swelling", "ear_discharge", "ear infection"],
+    "healthy_ear":             ["healthy_ear", "normal_ear", "healthy"]
+  },
+
+  "wounds": {
+    "mild":     ["minor_cut", "mild_wound", "minor wound"],
+    "moderate": ["moderate_wound", "healing_wound"],
+    "severe":   ["deep_wound", "severe_wound", "infected_wound", "bleeding_wound", "burn"],
+    "wound_infection": ["wound_infection", "wound infection"]
+  },
+
+  "body_condition": {
+    "underweight": ["underweight", "thin", "emaciated"],
+    "ideal":       ["ideal", "healthy_weight", "normal_weight"],
+    "overweight":  ["overweight", "obese", "fat"]
+  },
+
+  "species_health": {
+    "healthy_dog":     ["healthy_dog", "dog_healthy", "healthy"],
+    "healthy_cat":     ["healthy_cat", "cat_healthy", "healthy"],
+    "healthy_cattle":  ["healthy_cattle", "cattle_healthy", "healthy", "lumpy_skin_disease_healthy"]
+  },
+
+  "species": {
+    "dog":    ["dog", "dogs"],
+    "cat":    ["cat", "cats"],
+    "cattle": ["cattle", "cow", "cows", "bovine"]
+  },
+
+  "hard_negatives": {
+    "environment_confounders": [
+      "mud", "wet_fur", "dirt", "grass", "sand", "shadow", "flash_reflection",
+      "long_hair_covering_lesion", "dark_coat", "white_coat", "grooming_marks",
+      "scar", "normal_pigmentation", "wrinkle", "folded_skin"
+    ]
+  },
+
+  "excluded_not_photo_diagnosable": [
+    "distemper", "parvovirus", "feline_leukemia", "feline_panleukopenia",
+    "kennel_cough", "otitis_media", "dental_disease", "mastitis", "foot_and_mouth_disease"
+  ]
+}
