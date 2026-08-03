@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Datasets
+dataset_manager/downloads/
+dataset_manager/raw/
+dataset_manager/clean/
+dataset_manager/metadata/
+dataset_manager/logs/
+
+# Models
+models/
+*.keras
+*.h5
+*.tflite
+*.onnx
+
+# Outputs
+outputs/
+
+# External test images
+external_test/*.jpg
+external_test/*.jpeg
+external_test/*.png
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
