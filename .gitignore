@@ -8,6 +8,7 @@ venv/
 dataset_manager/downloads/
 dataset_manager/raw/
 dataset_manager/clean/
+dataset_manager/splits/
 dataset_manager/metadata/
 dataset_manager/logs/
 
