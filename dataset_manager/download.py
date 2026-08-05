@@ -4,7 +4,7 @@ Stage 1: Download
 Pulls datasets from Kaggle and Roboflow into downloads/<source>/<dataset_name>/
 
 Setup required before running:
-  1. Kaggle: pla    ce your kaggle.json API token at ~/.kaggle/kaggle.json
+  1. Kaggle: place your kaggle.json API token at ~/.kaggle/kaggle.json
      (get it from kaggle.com -> Account -> Create New API Token)
   2. Roboflow: set the ROBOFLOW_API_KEY environment variable
      (get it from your Roboflow workspace settings)
@@ -18,45 +18,70 @@ still works fine for actual downloads once your token is set up.
 """
 
 import os
+import sys
 import subprocess
 from pathlib import Path
 
 DOWNLOAD_DIR = Path(__file__).parent / "downloads"
 
-# ---- Fill these in with the datasets you've actually vetted (class list,
-# license, sample-checked) using the checklist from your dataset research ----
+# ------------------------------------------------------------------
+# Kaggle datasets (Partner A)
+# ------------------------------------------------------------------
 
 KAGGLE_DATASETS = [
-    # "owner/dataset-slug",
-    # e.g. "atharvaingle/crop-recommendation-dataset"
+    "devang03mgr/cattle-diseases-datasets",
+    "smadive/pet-disease-images",
 ]
+
+# ------------------------------------------------------------------
+# Roboflow datasets (Partner B)
+# ------------------------------------------------------------------
+
 ROBOFLOW_DATASETS = [
     {
         "workspace": "kendys-workspace",
         "project": "dog-and-cat-skin-disease-identification-2",
-        "version": 2
+        "version": 2,
     }
 ]
 
 
 def download_kaggle(dataset_slug: str):
     """Downloads and unzips a Kaggle dataset into downloads/kaggle/<slug>/"""
+
     out_dir = DOWNLOAD_DIR / "kaggle" / dataset_slug.replace("/", "__")
     out_dir.mkdir(parents=True, exist_ok=True)
+
     print(f"[kaggle] downloading {dataset_slug} -> {out_dir}")
+
     subprocess.run(
-        ["kaggle", "datasets", "download", "-d", dataset_slug, "-p", str(out_dir), "--unzip"],
+        [
+            sys.executable,
+            "-m",
+            "kaggle",
+            "datasets",
+            "download",
+            "-d",
+            dataset_slug,
+            "-p",
+            str(out_dir),
+            "--unzip",
+        ],
         check=True,
     )
 
 
 def download_roboflow(workspace: str, project: str, version: int, fmt: str = "folder"):
     """Downloads a Roboflow Universe dataset into downloads/roboflow/<project>/"""
+
     from roboflow import Roboflow
 
     api_key = os.environ.get("ROBOFLOW_API_KEY")
+
     if not api_key:
-        raise EnvironmentError("Set the ROBOFLOW_API_KEY environment variable first.")
+        raise EnvironmentError(
+            "Set the ROBOFLOW_API_KEY environment variable first."
+        )
 
     out_dir = DOWNLOAD_DIR / "roboflow" / project
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -86,22 +111,23 @@ def download_roboflow(workspace: str, project: str, version: int, fmt: str = "fo
     print("===========================\n")
 
     return dataset
+
+
 def main():
     DOWNLOAD_DIR.mkdir(exist_ok=True)
+
+    print("\n========== KAGGLE DOWNLOAD ==========\n")
 
     for slug in KAGGLE_DATASETS:
         try:
             download_kaggle(slug)
         except Exception as e:
-            print(f"  !! failed: {slug} -> {e}")
+            print(f"!! failed: {slug} -> {e}")
 
-    for ds in ROBOFLOW_DATASETS:
-        try:
-            download_roboflow(ds["workspace"], ds["project"], ds["version"])
-        except Exception as e:
-            print(f"  !! failed: {ds['project']} -> {e}")
-
-    print("\nDone. Check downloads/ for results, then run extract.py if any zips remain.")
+    print("\n=====================================")
+    print("Partner A work completed.")
+    print("Partner B will download Roboflow datasets.")
+    print("=====================================")
 
 
 if __name__ == "__main__":
