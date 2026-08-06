@@ -27,8 +27,8 @@ DOWNLOAD_DIR = Path(__file__).parent / "downloads"
 # license, sample-checked) using the checklist from your dataset research ----
 
 KAGGLE_DATASETS = [
-    # "owner/dataset-slug",
-    # e.g. "atharvaingle/crop-recommendation-dataset"
+    "devang03mgr/cattle-diseases-datasets",
+    "smadive/pet-disease-images",
 ]
 ROBOFLOW_DATASETS = [
     #Skin Disease
