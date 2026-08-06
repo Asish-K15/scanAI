@@ -9,7 +9,11 @@
     "hotspot":                ["hotspot", "hot_spot", "hot spots", "acute_moist_dermatitis"],
     "fungal_infection":        ["fungal_infection", "fungal_infections", "fungal infection"],
     "allergic_dermatitis":     ["allergic_dermatitis", "skin_allergy", "hypersensitivity", "flea_allergy_dermatitis", "flea allergy"],
-    "healthy_skin":            ["healthy_skin", "healthy skin", "normal_skin", "healthy"]
+    "healthy_skin":            ["healthy_skin", "healthy skin", "normal_skin", "healthy"],
+    "lumpy_skin_disease":      [ "lumpy skin","lumpy_skin","lumpy skin disease","lumpy_skin_disease","lumpy skin disease","lsd"],
+    "ecthyma": ["ecthyma","contagious ecthyma","contagious ecthym","orf"],
+    "dermatitis_unknown": [ "contagious dermatitis lumpy skin", "dermatitis ecthym lumpy skin","ecthym skin","dermatitis"]
+
   },
 
   "parasites": {
@@ -65,6 +69,8 @@
 
   "excluded_not_photo_diagnosable": [
     "distemper", "parvovirus", "feline_leukemia", "feline_panleukopenia",
-    "kennel_cough", "otitis_media", "dental_disease", "mastitis", "foot_and_mouth_disease"
+    "kennel_cough", "otitis_media", "dental_disease", "mastitis", "foot_and_mouth_disease","brd","bovine_respiratory_disease","bovine_respiratory_disease_complex","bovine_respiratory_disease complex",
+    "(brd) disease ecthym","(brd) bovine disease respiratory","(brd) bovine disease respiratory complex","(brd) bovine disease respiratory complex (brd)","(brd) bovine disease respiratory complex (brd) disease ecthym",
+    "bovinde disease respiratory","brd bovine disease respiratoty"
   ]
 }

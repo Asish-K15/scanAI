@@ -31,11 +31,26 @@ KAGGLE_DATASETS = [
     # e.g. "atharvaingle/crop-recommendation-dataset"
 ]
 ROBOFLOW_DATASETS = [
+    #Skin Disease
     {
         "workspace": "kendys-workspace",
         "project": "dog-and-cat-skin-disease-identification-2",
         "version": 2
     }
+    #Cattle Disease
+    {
+        
+        "workspace": "sliit-workspace",
+        "project": "cattle-diseases",
+        "version": 1
+    }
+    #Lumpy skin disease
+    {
+        "workspace": "qq-mgfrz",
+        "project": "lumpy-skin-disease",
+        "version": 1
+    }
+
 ]
 
 
@@ -59,33 +74,33 @@ def download_roboflow(workspace: str, project: str, version: int, fmt: str = "fo
         raise EnvironmentError("Set the ROBOFLOW_API_KEY environment variable first.")
 
     out_dir = DOWNLOAD_DIR / "roboflow" / project
-    out_dir.mkdir(parents=True, exist_ok=True)
-
+    # IMPORTANT: do NOT pre-create out_dir here. Some Roboflow SDK versions treat
+    # an already-existing target folder as "already downloaded" and silently skip
+    # the actual file transfer. Let the SDK create the folder itself.
     print(f"[roboflow] downloading {workspace}/{project} v{version} -> {out_dir}")
 
     rf = Roboflow(api_key=api_key)
     proj = rf.workspace(workspace).project(project)
-
     ver = proj.version(version)
 
-    print("\n=== VERSION INFO ===")
-    print(ver)
-    print("====================\n")
+    try:
+        dataset = ver.download(fmt, location=str(out_dir), overwrite=True)
+    except TypeError:
+        # older roboflow SDK versions don't accept the overwrite= kwarg
+        dataset = ver.download(fmt, location=str(out_dir))
 
-    dataset = ver.download(fmt, location=str(out_dir))
+    # Verify something actually landed on disk instead of trusting the returned object
+    image_exts = {".jpg", ".jpeg", ".png"}
+    found_images = [f for f in Path(dataset.location).rglob("*") if f.suffix.lower() in image_exts]
 
-    print("\n=== DOWNLOAD RESULT ===")
-    print(dataset)
-    print("=======================\n")
-
-    print("\n===== DOWNLOAD RESULT =====")
-    print("\n=== DATASET INFO ===")
-    print("Location:", dataset.location)
-    print("Name:", dataset.name)
-    print("====================")
-    print("===========================\n")
-
-    return dataset
+    if len(found_images) == 0:
+        print(f"  !! WARNING: 0 images found at {dataset.location} after download.")
+        print(f"     dataset object: {vars(dataset)}")
+        print(f"     Manual fallback: open https://universe.roboflow.com/{workspace}/{project}")
+        print(f"     click 'Download Dataset', choose the Folder Structure / classification export,")
+        print(f"     and extract the zip into: {out_dir}")
+    else:
+        print(f"  -> {len(found_images)} images downloaded to {dataset.location}")
 def main():
     DOWNLOAD_DIR.mkdir(exist_ok=True)
 
