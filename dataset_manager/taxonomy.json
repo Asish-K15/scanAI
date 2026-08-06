@@ -2,13 +2,13 @@
   "_comment": "Master taxonomy for VetVision/PetVision AI. Every raw dataset's class names get mapped through this file. Edit the alias lists as you discover new label spellings in new datasets — do NOT rename folders by hand.",
 
   "skin": {
-    "ringworm":              ["ringworm", "dermatophytosis", "fungal_ringworm", "tinea", "fu-ringworm"],
-    "mange":                 ["mange", "demodicosis", "demodex", "sarcoptic_mange"],
+    "ringworm":              ["ringworm", "dermatophytosis", "fungal_ringworm", "tinea", "fu-ringworm", "ringworm in cat"],
+    "mange":                 ["mange", "demodicosis", "demodex", "sarcoptic_mange", "mange in dog"],
     "scabies":               ["scabies"],
     "pyoderma":               ["pyoderma", "bacterial_dermatosis", "bacterial_dermatitis"],
-    "hotspot":                ["hotspot", "hot_spot", "hot spots", "acute_moist_dermatitis"],
-    "fungal_infection":        ["fungal_infection", "fungal_infections", "fungal infection"],
-    "allergic_dermatitis":     ["allergic_dermatitis", "skin_allergy", "hypersensitivity", "flea_allergy_dermatitis", "flea allergy"],
+    "hotspot":                ["hotspot", "hot_spot", "hot spots", "acute_moist_dermatitis", "hot spots in dog"],
+    "fungal_infection":        ["fungal_infection", "fungal_infections", "fungal infection", "fungal infection in dog","fungal infection in cat"],
+    "allergic_dermatitis":     ["allergic_dermatitis", "skin_allergy", "hypersensitivity", "flea_allergy_dermatitis", "flea allergy", "skin allergy in dog", "skin allergy in cat"],
     "healthy_skin":            ["healthy_skin", "healthy skin", "normal_skin", "healthy"],
     "lumpy_skin_disease":      [ "lumpy skin","lumpy_skin","lumpy skin disease","lumpy_skin_disease","lumpy skin disease","lsd"],
     "ecthyma": ["ecthyma","contagious ecthyma","contagious ecthym","orf"],
@@ -17,15 +17,15 @@
   },
 
   "parasites": {
-    "tick_infestation":  ["tick", "ticks", "tick_infestation", "tick infestation", "ectoparasite_infestation"],
+    "tick_infestation":  ["tick", "ticks", "tick_infestation", "tick infestation", "ectoparasite_infestation", "tick infestation in dog"],
     "flea_infestation":  ["flea", "fleas", "flea_infestation", "flea infestation"],
-    "ear_mites":         ["ear_mites", "ear mites", "otodectes"]
+    "ear_mites":         ["ear_mites", "ear mites", "otodectes", "ear mites in cat"]
   },
 
   "eye": {
     "pink_eye":      ["pink_eye", "pinkeye", "infectious_bovine_keratoconjunctivitis", "ibk"],
     "cherry_eye":    ["cherry_eye", "cherry eye"],
-    "eye_infection": ["eye_infection", "conjunctivitis", "eye infection"],
+    "eye_infection": ["eye_infection", "conjunctivitis", "eye infection", "eye infection in dog", "eye infection in cat"],
     "healthy_eye":   ["healthy_eye", "normal_eye", "healthy"]
   },
 
