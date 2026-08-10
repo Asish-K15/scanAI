@@ -1,7 +1,7 @@
 dataset_name,source,url,license,status,task_type,version,format,species,num_images,num_classes,notes
-"Dog And Cat Skin Disease Identification 2",Roboflow,https://universe.roboflow.com/kendys-workspace/dog-and-cat-skin-disease-identification-2,CC BY 4.0,active,classification,2,folder,"dog,cat",6141,10,"primary skin-disease source, has pretrained ResNet50 baseline at 76.7% - use as accuracy benchmark"
-"Cattle diseases (Roboflow)",Roboflow,https://universe.roboflow.com/sliit-kuemd/cattle-diseases,VERIFY,pending,classification,1,folder,cattle,,,"verify class list and license before use"
-"Lumpy skin disease",Roboflow,https://universe.roboflow.com/qq-mgfrz/lumpy-skin-disease-detection,VERIFY,pending,classification,1,folder,cattle,,,"verify class list and license before use"
-"Dog eye problems detection",Roboflow,https://universe.roboflow.com/jonathan-chandra/dog-eye-problems-detection,VERIFY,pending,object_detection,1,folder,dog,,,"verify class list and license before use"
-"Cattle diseases datasets",Kaggle,https://www.kaggle.com/datasets/devang03mgr/cattle-diseases-datasets,VERIFY,pending,classification,,,cattle,,,"verify class list and license before use"
-"Pet Disease images",Kaggle,https://www.kaggle.com/datasets/smadive/pet-disease-images,VERIFY,pending,classification,,,"dog,cat",,,"verify class list and license before use"
+"Dog And Cat Skin Disease Identification 2",Roboflow,"https://universe.roboflow.com/kendys-workspace/dog-and-cat-skin-disease-identification-2","CC BY 4.0",active,classification,2,folder,"dog,cat",6141,10,"primary skin-disease source, has pretrained ResNet50 baseline at 76.7% - use as accuracy benchmark"
+"Cattle diseases (Roboflow)",Roboflow,"https://universe.roboflow.com/sliit-kuemd/cattle-diseases",VERIFY,active,classification,1,folder,cattle,,,"downloaded; verify class list and license before relying on it"
+"Lumpy skin disease",Roboflow,"https://universe.roboflow.com/qq-mgfrz/lumpy-skin-disease-detection",VERIFY,active,classification,1,folder,cattle,,,"downloaded; verify class list and license before relying on it"
+"Dog eye problems detection",Roboflow,"https://universe.roboflow.com/jonathan-chandra/dog-eye-problems-detection",VERIFY,pending,object_detection,1,folder,dog,,,"keep pending until you decide whether to support object detection or crop it into classification"
+"Cattle diseases datasets",Kaggle,"https://www.kaggle.com/datasets/devang03mgr/cattle-diseases-datasets",VERIFY,active,classification,,,cattle,,,"Partner A validated; verify class list and license before relying on it"
+"Pet Disease images",Kaggle,"https://www.kaggle.com/datasets/smadive/pet-disease-images",VERIFY,active,classification,,,"dog,cat",,,"Partner A validated; verify class list and license before relying on it"
