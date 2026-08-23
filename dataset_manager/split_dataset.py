@@ -1,173 +1,394 @@
 """
-Stage: Stratified Split with Leakage Prevention
---------------------------------------------------
-Splits clean/ into splits/train, splits/val, splits/test (default 70/15/15,
-stratified per class) while guaranteeing that near-duplicate images
-(as found by dedup.py) never end up split across train/val/test.
+Stage: Stratified Train / Validation / Test Split
+---------------------------------------------------
+Splits baseline_clean/ into:
 
-Why this matters: if the same source photo (or a near-duplicate of it)
-appears in both train and test, your reported test accuracy is
-inflated and meaningless. This groups near-duplicates into clusters
-using Union-Find, then splits at the CLUSTER level, not the image level.
+    splits/train/
+    splits/val/
+    splits/test/
 
-Run AFTER dedup.py has produced metadata/duplicates.csv (even if you
-haven't removed duplicates yet — this script uses that file to keep
-near-duplicate clusters together regardless).
+Default ratio:
+    70% train
+    15% validation
+    15% test
 
-Usage:
-  python split_dataset.py                  # default 70/15/15
-  python split_dataset.py --train 0.8 --val 0.1 --test 0.1
+The baseline_clean dataset has already been cleaned for:
+    - safe single-class duplicates
+    - cross-class duplicate contamination
+    - excluded/low-volume classes
+
+Therefore this script does NOT use the old duplicates.csv.
 """
 
 import argparse
 import csv
 import random
 import shutil
-from collections import defaultdict
 from pathlib import Path
 
-CLEAN_DIR = Path(__file__).parent / "clean"
-SPLITS_DIR = Path(__file__).parent / "splits"
-METADATA_DIR = Path(__file__).parent / "metadata"
+
+# ============================================================
+# DIRECTORIES
+# ============================================================
+
+BASE_DIR = Path(__file__).parent
+
+# IMPORTANT: use the verified baseline dataset
+CLEAN_DIR = BASE_DIR / "baseline_clean"
+
+SPLITS_DIR = BASE_DIR / "splits"
+METADATA_DIR = BASE_DIR / "metadata"
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
 SEED = 42
 
 
-class UnionFind:
-    """Groups near-duplicate images into clusters so a cluster is never split
-    across train/val/test."""
+# ============================================================
+# SPLIT ONE CLASS
+# ============================================================
 
-    def __init__(self, items):
-        self.parent = {item: item for item in items}
+def split_class(image_paths, ratios, rng):
+    """
+    Split one class into train / val / test.
 
-    def find(self, x):
-        while self.parent[x] != x:
-            self.parent[x] = self.parent[self.parent[x]]
-            x = self.parent[x]
-        return x
+    Uses a fixed random seed so the split is reproducible.
+    """
 
-    def union(self, a, b):
-        ra, rb = self.find(a), self.find(b)
-        if ra != rb:
-            self.parent[ra] = rb
+    images = list(image_paths)
 
-    def clusters(self):
-        groups = defaultdict(list)
-        for item in self.parent:
-            groups[self.find(item)].append(item)
-        return list(groups.values())
+    # Reproducible shuffle
+    rng.shuffle(images)
+
+    n_total = len(images)
+
+    train_count = int(n_total * ratios["train"])
+    val_count = int(n_total * ratios["val"])
+
+    train = images[:train_count]
+
+    val = images[
+        train_count:
+        train_count + val_count
+    ]
+
+    test = images[
+        train_count + val_count:
+    ]
+
+    return {
+        "train": train,
+        "val": val,
+        "test": test
+    }
 
 
-def load_duplicate_pairs():
-    dup_csv = METADATA_DIR / "duplicates.csv"
-    pairs = []
-    if dup_csv.exists():
-        with open(dup_csv) as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                pairs.append((row["image_a"], row["image_b"]))
-    return pairs
-
-
-def split_class(image_paths, duplicate_pairs, ratios, rng):
-    """Returns {split_name: [image_paths]} for one class, clustering
-    near-duplicates first so they land in the same split."""
-    image_set = set(str(p) for p in image_paths)
-
-    uf = UnionFind(image_set)
-    for a, b in duplicate_pairs:
-        if a in image_set and b in image_set:
-            uf.union(a, b)
-
-    clusters = uf.clusters()
-    rng.shuffle(clusters)
-
-    n_total = sum(len(c) for c in clusters)
-    train_target = n_total * ratios["train"]
-    val_target = n_total * ratios["val"]
-
-    train, val, test = [], [], []
-    running = 0
-    for cluster in clusters:
-        if running < train_target:
-            train.extend(cluster)
-        elif running < train_target + val_target:
-            val.extend(cluster)
-        else:
-            test.extend(cluster)
-        running += len(cluster)
-
-    return {"train": train, "val": val, "test": test}
-
+# ============================================================
+# MAIN
+# ============================================================
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--train", type=float, default=0.70)
-    parser.add_argument("--val", type=float, default=0.15)
-    parser.add_argument("--test", type=float, default=0.15)
+
+    parser = argparse.ArgumentParser(
+        description="Create stratified train/val/test split from baseline_clean/"
+    )
+
+    parser.add_argument(
+        "--train",
+        type=float,
+        default=0.70,
+        help="Training ratio (default: 0.70)"
+    )
+
+    parser.add_argument(
+        "--val",
+        type=float,
+        default=0.15,
+        help="Validation ratio (default: 0.15)"
+    )
+
+    parser.add_argument(
+        "--test",
+        type=float,
+        default=0.15,
+        help="Test ratio (default: 0.15)"
+    )
+
     args = parser.parse_args()
 
-    ratios = {"train": args.train, "val": args.val, "test": args.test}
-    assert abs(sum(ratios.values()) - 1.0) < 1e-6, "train+val+test ratios must sum to 1.0"
+    ratios = {
+        "train": args.train,
+        "val": args.val,
+        "test": args.test
+    }
+
+    # --------------------------------------------------------
+    # Validate ratios
+    # --------------------------------------------------------
+
+    if abs(sum(ratios.values()) - 1.0) > 1e-6:
+        raise ValueError(
+            "train + val + test ratios must equal 1.0"
+        )
+
+    # --------------------------------------------------------
+    # Check baseline_clean
+    # --------------------------------------------------------
+
+    if not CLEAN_DIR.exists():
+        raise FileNotFoundError(
+            f"Baseline dataset not found: {CLEAN_DIR}"
+        )
+
+    print(f"Input dataset: {CLEAN_DIR}")
+    print(f"Split ratios: {ratios}")
+    print(f"Random seed: {SEED}")
+    print()
+
+    # --------------------------------------------------------
+    # Remove old splits if they exist
+    # --------------------------------------------------------
+
+    if SPLITS_DIR.exists():
+        print("Removing existing splits/ directory...")
+        shutil.rmtree(SPLITS_DIR)
+
+    # Create split directories
+    for split in ("train", "val", "test"):
+        (SPLITS_DIR / split).mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
+    # --------------------------------------------------------
+    # Reproducible random generator
+    # --------------------------------------------------------
 
     rng = random.Random(SEED)
-    duplicate_pairs = load_duplicate_pairs()
-
-    for split in ("train", "val", "test"):
-        (SPLITS_DIR / split).mkdir(parents=True, exist_ok=True)
 
     manifest_rows = []
     class_summary = []
 
+    total_images = 0
+
+    # --------------------------------------------------------
+    # Process each top-level group
+    # --------------------------------------------------------
+
     for group_dir in sorted(CLEAN_DIR.iterdir()):
-        if not group_dir.is_dir() or group_dir.name == "_UNMAPPED":
+
+        if not group_dir.is_dir():
             continue
+
+        # Ignore unmapped data
+        if group_dir.name == "_UNMAPPED":
+            continue
+
+        # ----------------------------------------------------
+        # Process each class
+        # ----------------------------------------------------
+
         for class_dir in sorted(group_dir.iterdir()):
+
             if not class_dir.is_dir():
                 continue
 
-            unified_class = f"{group_dir.name}__{class_dir.name}"
-            images = [p for p in class_dir.iterdir() if p.suffix.lower() in IMAGE_EXTS]
+            images = [
+                p for p in class_dir.iterdir()
+                if p.is_file()
+                and p.suffix.lower() in IMAGE_EXTS
+            ]
+
             if not images:
                 continue
 
-            split_result = split_class(images, duplicate_pairs, ratios, rng)
+            unified_class = (
+                f"{group_dir.name}__{class_dir.name}"
+            )
+
+            # ------------------------------------------------
+            # Split
+            # ------------------------------------------------
+
+            split_result = split_class(
+                images,
+                ratios,
+                rng
+            )
+
+            # ------------------------------------------------
+            # Copy images
+            # ------------------------------------------------
 
             for split_name, split_images in split_result.items():
-                dest_dir = SPLITS_DIR / split_name / unified_class
-                dest_dir.mkdir(parents=True, exist_ok=True)
-                for img_path_str in split_images:
-                    img_path = Path(img_path_str)
-                    if img_path.exists():
-                        shutil.copy2(img_path, dest_dir / img_path.name)
-                        manifest_rows.append([str(img_path), unified_class, split_name])
+
+                destination_dir = (
+                    SPLITS_DIR
+                    / split_name
+                    / unified_class
+                )
+
+                destination_dir.mkdir(
+                    parents=True,
+                    exist_ok=True
+                )
+
+                for img_path in split_images:
+
+                    destination = (
+                        destination_dir
+                        / img_path.name
+                    )
+
+                    shutil.copy2(
+                        img_path,
+                        destination
+                    )
+
+                    manifest_rows.append([
+                        str(img_path),
+                        unified_class,
+                        split_name
+                    ])
+
+            # ------------------------------------------------
+            # Summary
+            # ------------------------------------------------
+
+            train_count = len(
+                split_result["train"]
+            )
+
+            val_count = len(
+                split_result["val"]
+            )
+
+            test_count = len(
+                split_result["test"]
+            )
+
+            class_total = (
+                train_count
+                + val_count
+                + test_count
+            )
+
+            total_images += class_total
 
             class_summary.append([
                 unified_class,
-                len(split_result["train"]),
-                len(split_result["val"]),
-                len(split_result["test"]),
+                class_total,
+                train_count,
+                val_count,
+                test_count
             ])
 
-    METADATA_DIR.mkdir(exist_ok=True)
-    manifest_path = METADATA_DIR / "split_manifest.csv"
-    with open(manifest_path, "w", newline="") as f:
+    # ========================================================
+    # WRITE MANIFEST
+    # ========================================================
+
+    METADATA_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    manifest_path = (
+        METADATA_DIR
+        / "split_manifest.csv"
+    )
+
+    with open(
+        manifest_path,
+        "w",
+        newline="",
+        encoding="utf-8"
+    ) as f:
+
         writer = csv.writer(f)
-        writer.writerow(["original_path", "class", "split"])
-        writer.writerows(manifest_rows)
 
-    summary_path = METADATA_DIR / "split_summary.csv"
-    with open(summary_path, "w", newline="") as f:
+        writer.writerow([
+            "original_path",
+            "class",
+            "split"
+        ])
+
+        writer.writerows(
+            manifest_rows
+        )
+
+    # ========================================================
+    # WRITE SUMMARY
+    # ========================================================
+
+    summary_path = (
+        METADATA_DIR
+        / "split_summary.csv"
+    )
+
+    with open(
+        summary_path,
+        "w",
+        newline="",
+        encoding="utf-8"
+    ) as f:
+
         writer = csv.writer(f)
-        writer.writerow(["class", "train", "val", "test"])
-        writer.writerows(class_summary)
 
-    print(f"Split complete. {len(manifest_rows)} images assigned across train/val/test.")
-    print(f"Manifest: {manifest_path}")
-    print(f"Per-class summary: {summary_path}")
-    print("\nsplits/ is now ready for train_baseline.ipynb")
+        writer.writerow([
+            "class",
+            "total",
+            "train",
+            "val",
+            "test"
+        ])
 
+        writer.writerows(
+            class_summary
+        )
+
+    # ========================================================
+    # FINAL REPORT
+    # ========================================================
+
+    train_total = sum(
+        row[2] for row in class_summary
+    )
+
+    val_total = sum(
+        row[3] for row in class_summary
+    )
+
+    test_total = sum(
+        row[4] for row in class_summary
+    )
+
+    print()
+    print("=" * 60)
+    print("SPLIT COMPLETE")
+    print("=" * 60)
+
+    print(f"Total images : {total_images}")
+    print(f"Train        : {train_total}")
+    print(f"Validation   : {val_total}")
+    print(f"Test         : {test_total}")
+
+    print()
+    print(f"Train ratio  : {train_total / total_images:.3f}")
+    print(f"Val ratio    : {val_total / total_images:.3f}")
+    print(f"Test ratio   : {test_total / total_images:.3f}")
+
+    print()
+    print(f"Manifest : {manifest_path}")
+    print(f"Summary  : {summary_path}")
+    print(f"Splits   : {SPLITS_DIR}")
+
+    print()
+    print("Baseline split is ready.")
+
+
+# ============================================================
+# ENTRY POINT
+# ============================================================
 
 if __name__ == "__main__":
     main()
