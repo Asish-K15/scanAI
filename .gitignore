@@ -61,3 +61,4 @@ outputs/
 .idea/
 .DS_Store
 Thumbs.db
+dog_eye_model/scanai_dog_eye_v1_onnx_artifact.zip
