@@ -1,8 +1,8 @@
-\# ScanAI Dog Eye Inference Contract
+# ScanAI Dog Eye Inference Contract
 
 
 
-\## Model
+## Model
 
 
 
@@ -18,7 +18,7 @@ Inference engine: ONNX Runtime
 
 
 
-\## Input
+## Input
 
 
 
@@ -36,17 +36,17 @@ Normalization:
 
 Mean:
 
-\[0.485, 0.456, 0.406]
+[0.485, 0.456, 0.406]
 
 
 
 Standard deviation:
 
-\[0.229, 0.224, 0.225]
+[0.229, 0.224, 0.225]
 
 
 
-\## Supported Conditions
+## Supported Conditions
 
 
 
@@ -60,7 +60,7 @@ The model currently supports:
 
 
 
-\## Output
+## Output
 
 
 
@@ -72,29 +72,29 @@ The inference module returns:
 
 {
 
-&#x20; "condition": "entropion",
+  "condition": "entropion",
 
-&#x20; "confidence": 0.99966,
+  "confidence": 0.99966,
 
-&#x20; "confidence\_level": "high",
+  "confidence_level": "high",
 
-&#x20; "uncertain": false,
+  "uncertain": false,
 
-&#x20; "probabilities": {
+  "probabilities": {
 
-&#x20;   "conjunctivitis": 0.00034,
+    "conjunctivitis": 0.00034,
 
-&#x20;   "entropion": 0.99966
+    "entropion": 0.99966
 
-&#x20; },
+  },
 
-&#x20; "model": "EfficientNet-B0",
+  "model": "EfficientNet-B0",
 
-&#x20; "model\_version": "dog-eye-v1",
+  "model_version": "dog-eye-v1",
 
-&#x20; "engine": "ONNX Runtime",
+  "engine": "ONNX Runtime",
 
-&#x20; "screening\_only": true
+  "screening_only": true
 
 }
 
