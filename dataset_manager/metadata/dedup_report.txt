@@ -1,0 +1,3 @@
+Total images scanned: 11241
+Duplicate pairs found: 2816
+Approx duplicate rate: 25.1%

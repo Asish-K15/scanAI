@@ -1,35 +1,63 @@
-# Python
+# ============================================================
+# PYTHON
+# ============================================================
+
+.venv/
 __pycache__/
 *.pyc
-.venv/
-venv/
+*.pyo
 
-# Datasets
-dataset_manager/downloads/
-dataset_manager/raw/
+# ============================================================
+# DATASET - LARGE / GENERATED DATA
+# ============================================================
+
+dataset_manager/expansion/
 dataset_manager/clean/
-dataset_manager/splits/
-dataset_manager/metadata/
-dataset_manager/logs/
+dataset_manager/raw/
+dataset_manager/downloads/
 
-# Models
+# Dataset backups
+dataset_manager/metadata/cleanup_backup/
+dataset_manager/metadata/expansion_backup/
+
+# Generated dataset outputs/reviews
+dataset_manager/outputs/
+dataset_manager/metadata/expansion_checks/
+
+# ============================================================
+# MODEL CHECKPOINTS
+# ============================================================
+
+dog_eye_model/outputs/checkpoints/*.pth
+dog_eye_model/outputs/checkpoints/*.pt
+dog_eye_model/outputs/checkpoints/*.onnx
+
+# ============================================================
+# GENERATED MODEL OUTPUTS
+# ============================================================
+
+dog_eye_model/outputs/predictions/
+dog_eye_model/outputs/confusion_matrix/
+dog_eye_model/outputs/plots/
+
+# ============================================================
+# REVIEW IMAGES
+# ============================================================
+
+dog_eye_model/outputs/predictions/finetune_change_review/
+
+# ============================================================
+# OTHER LARGE / GENERATED ROOT OUTPUTS
+# ============================================================
+
 models/
-*.keras
-*.h5
-*.tflite
-*.onnx
-
-# Outputs
 outputs/
 
-# External test images
-external_test/*.jpg
-external_test/*.jpeg
-external_test/*.png
+# ============================================================
+# IDE / OS
+# ============================================================
 
-# Jupyter
-.ipynb_checkpoints/
-
-# OS
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db

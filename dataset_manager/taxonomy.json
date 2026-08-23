@@ -12,7 +12,13 @@
     "healthy_skin":            ["healthy_skin", "healthy skin", "normal_skin", "healthy"],
     "lumpy_skin_disease":      [ "lumpy", "lumpy skin","lumpy_skin","lumpy skin disease","lumpy_skin_disease","lsd"],
     "ecthyma": ["ecthyma","contagious ecthyma","contagious ecthym","orf"],
-    "dermatitis_unknown": [ "contagious dermatitis lumpy skin", "dermatitis ecthym lumpy skin","ecthym skin","dermatitis"]
+    "foot_and_mouth_disease": [   "foot-and-mouth",  "foot and mouth",  "foot_and_mouth_disease","foot and mouth disease","fmd"]
+                                
+
+
+  
+  
+
 
   },
 
@@ -69,12 +75,13 @@
 
   "excluded_not_photo_diagnosable": [
     "distemper", "parvovirus", "feline_leukemia", "feline_panleukopenia",
-    "kennel_cough", "otitis_media", "dental_disease", "mastitis", "foot_and_mouth_disease","brd","bovine_respiratory_disease","bovine_respiratory_disease_complex","bovine_respiratory_disease complex",
+    "kennel_cough", "otitis_media", "dental_disease", "mastitis","brd","bovine_respiratory_disease","bovine_respiratory_disease_complex","bovine_respiratory_disease complex",
     "(brd) disease ecthym","(brd) bovine disease respiratory","(brd) bovine disease respiratory complex","(brd) bovine disease respiratory complex (brd)","(brd) bovine disease respiratory complex (brd) disease ecthym",
     "bovinde disease respiratory","brd bovine disease respiratoty",
     "distemper in dog", "parvovirus in dog", "kennel cough in dog",
     "dental disease in cat", "dental disease in dog",
     "urinary tract infection in cat",
-    "worm infection in cat", "worm infection in dog"
+    "worm infection in cat", "worm infection in dog","dermatitis",
+"ecthym skin"
   ]
 }
