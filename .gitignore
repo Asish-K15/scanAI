@@ -70,3 +70,5 @@ dataset_manager/metadata/dataset_inventory.csv
 dataset_manager/metadata/safe_duplicate_removals.csv
 dataset_manager/metadata/split_manifest.csv
 dataset_manager/metadata/split_summary.csv
+dataset_manager/metadata/baseline_exclude_classes.txt
+dataset_manager/metadata/cross_class_quarantine.csv
