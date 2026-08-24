@@ -4,7 +4,7 @@
 
 Specification consolidated from reviewed and approved project decisions.
 
-Implementation remains blocked until the remaining undefined rules are explicitly specified and approved.
+Implementation is permitted for explicitly approved v1 behavior. Additional implementation remains blocked for rules that are still undefined.
 
 ## Purpose
 
