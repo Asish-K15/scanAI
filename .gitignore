@@ -62,3 +62,7 @@ outputs/
 .DS_Store
 Thumbs.db
 dog_eye_model/scanai_dog_eye_v1_onnx_artifact.zip
+
+dataset_manager/backup_roboflow/
+dataset_manager/baseline_clean/
+dataset_manager/splits/
