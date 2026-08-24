@@ -246,6 +246,26 @@ The following must not be introduced without explicit project approval:
 - mathematical fusion formulas presented as previously agreed requirements
 - unsupported clinical rules presented as existing ScanAI requirements
 
+## Mathematical Fusion
+
+Mathematical fusion is intentionally undefined for v1.
+
+The current project requirements do not provide sufficient evidence that a mathematical fusion formula is required.
+
+Therefore, v1 must not introduce:
+
+- weighted confidence scores
+- confidence -> urgency conversion
+- severity x confidence formulas
+- highest-confidence conflict resolution
+- arbitrary numerical thresholds
+
+Model confidence remains separate from urgency assignment unless an explicit, evidence-supported rule is approved.
+
+The initial v1 implementation should use only the approved evidence and urgency rules documented in this specification.
+
+No mathematical fusion formula is approved or implemented for v1.
+
 ## Final Recommendation Schema
 
 The Fusion / Urgency output schema is approved at the field level.
