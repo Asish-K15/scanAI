@@ -54,5 +54,37 @@ class TestRecommendation(unittest.TestCase):
         self.assertTrue(result["evidence"]["screening_only"])
 
 
+    def test_low_confidence_does_not_create_urgency(self):
+        model_result = {
+            "condition": "conjunctivitis",
+            "confidence": 0.42,
+            "confidence_level": "low",
+            "uncertain": True,
+            "probabilities": {
+                "conjunctivitis": 0.42,
+                "entropion": 0.58,
+            },
+            "model": "EfficientNet-B0",
+            "model_version": "dog-eye-v1",
+            "engine": "ONNX Runtime",
+            "screening_only": True,
+        }
+
+        result = build_recommendation("dog", "eye", model_result)
+
+        self.assertTrue(result["uncertain"])
+        self.assertEqual(result["confidence_level"], "low")
+        self.assertIsNone(result["severity"])
+        self.assertIsNone(result["urgency"])
+        self.assertEqual(
+            result["evidence_status"],
+            "insufficient_evidence",
+        )
+        self.assertEqual(
+            result["recommendation"],
+            "insufficient evidence / urgency undefined",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
