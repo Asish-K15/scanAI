@@ -66,3 +66,7 @@ dog_eye_model/scanai_dog_eye_v1_onnx_artifact.zip
 dataset_manager/backup_roboflow/
 dataset_manager/baseline_clean/
 dataset_manager/splits/
+dataset_manager/metadata/dataset_inventory.csv
+dataset_manager/metadata/safe_duplicate_removals.csv
+dataset_manager/metadata/split_manifest.csv
+dataset_manager/metadata/split_summary.csv
