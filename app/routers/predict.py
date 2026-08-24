@@ -5,6 +5,7 @@ from PIL import Image, UnidentifiedImageError
 
 from app.services.body_area_router import route_body_area
 from app.services.dog_eye import get_dog_eye_model
+from app.services.recommendation import build_recommendation
 from app.services.species_router import route_species
 
 
@@ -26,6 +27,8 @@ async def predict(
     Current implementation:
     - Species and body area are explicitly supplied by the client.
     - Dog + eye routes to the frozen dog-eye-v1 model.
+    - The model output is transformed into the approved v1
+      recommendation schema.
     - Other model routes are not implemented yet.
     """
 
@@ -78,11 +81,11 @@ async def predict(
                 detail=f"Dog eye inference failed: {exc}",
             ) from exc
 
-        return {
-            "species": routed_species,
-            "body_area": routed_body_area,
-            **result,
-        }
+        return build_recommendation(
+            routed_species,
+            routed_body_area,
+            result,
+        )
 
     # --------------------------------------------------------
     # Models not implemented yet
