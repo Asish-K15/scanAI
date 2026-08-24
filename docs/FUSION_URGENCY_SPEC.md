@@ -219,6 +219,20 @@ The Fusion / Urgency layer may receive:
 
 These fields represent model/application evidence inputs. The exact final multi-model Fusion contract remains to be finalized.
 
+## Dog Eye Severity / Urgency Mapping
+
+For v1, the current project requirements do not provide sufficient evidence for a direct Dog Eye -> severity mapping or Dog Eye -> urgency mapping.
+
+Therefore:
+
+- Dog Eye -> severity remains intentionally undefined for v1.
+- Dog Eye -> urgency remains intentionally undefined for v1.
+- Dog Eye model outputs remain contextual evidence/model outputs.
+- Dog Eye confidence remains engineering confidence information only.
+- The Dog Eye confidence thresholds (`0.60 / 0.80`) must not automatically determine severity or urgency.
+
+No disease-specific clinical mapping may be introduced without explicit, evidence-supported project approval.
+
 ## Explicitly Undefined
 
 The following remain undefined and must not be invented:
