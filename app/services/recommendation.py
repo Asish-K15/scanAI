@@ -1,4 +1,4 @@
-def build_recommendation(species, body_area, model_result):
+﻿def build_recommendation(species, body_area, model_result):
     """
     Transform existing model output into the approved v1
     Fusion / Urgency recommendation schema.
@@ -14,6 +14,11 @@ def build_recommendation(species, body_area, model_result):
         "confidence": model_result.get("confidence"),
         "confidence_level": model_result.get("confidence_level"),
         "uncertain": model_result.get("uncertain"),
+        "probabilities": model_result.get("probabilities"),
+        "model": model_result.get("model"),
+        "model_version": model_result.get("model_version"),
+        "engine": model_result.get("engine"),
+        "screening_only": model_result.get("screening_only"),
     }
 
     return {
