@@ -251,9 +251,9 @@ The following remain undefined and must not be invented:
 
 The following must not be introduced without explicit project approval:
 
-- confidence → urgency conversion
-- Dog Eye confidence threshold → clinical severity
-- Dog Eye confidence threshold → clinical urgency
+- confidence -> urgency conversion
+- Dog Eye confidence threshold -> clinical severity
+- Dog Eye confidence threshold -> clinical urgency
 - disease-specific Dog Eye urgency mappings
 - unsupported disease-specific severity mappings
 - mathematical fusion formulas presented as previously agreed requirements
@@ -278,6 +278,55 @@ Model confidence remains separate from urgency assignment unless an explicit, ev
 The initial v1 implementation should use only the approved evidence and urgency rules documented in this specification.
 
 No mathematical fusion formula is approved or implemented for v1.
+
+### Evidence and Recommendation Semantics
+
+#### `evidence_status`
+
+`evidence_status` explicitly communicates whether sufficient approved evidence exists for the recommendation.
+
+It must distinguish between:
+
+- approved urgency-relevant or severity-relevant evidence being available
+- no approved urgency-relevant evidence being available
+
+When no approved urgency-relevant evidence is available:
+
+- urgency remains undefined
+- insufficient evidence must be explicitly represented
+- the system must not silently assign Routine
+
+This field does not introduce new thresholds or clinical rules.
+
+#### `evidence`
+
+`evidence` records observable or supporting evidence already produced by the existing model/output pipeline.
+
+It may preserve information needed to explain the evidence status or recommendation.
+
+This field must not:
+
+- generate new disease-specific clinical evidence
+- infer an unapproved severity mapping
+- infer an unapproved urgency mapping
+- introduce a fusion mechanism
+
+#### `recommendation`
+
+`recommendation` communicates the result of the available approved evidence.
+
+When insufficient approved evidence exists for an urgency determination, the recommendation must explicitly communicate insufficient evidence / urgency undefined rather than silently assigning Routine.
+
+This field must not independently introduce:
+
+- Dog Eye -> severity mapping
+- Dog Eye -> urgency mapping
+- confidence -> urgency conversion
+- new Soon triggers
+- new Urgent triggers
+- additional Emergency triggers
+- mathematical fusion
+- unsupported final clinical decisions
 
 ## Final Recommendation Schema
 
