@@ -163,7 +163,7 @@ The following behavior is approved:
 - `uncertain = true` must not automatically map to Routine, Soon, Urgent, or Emergency.
 - Insufficient evidence should be explicitly identified in the recommendation rather than silently treated as low severity.
 - Any independently established urgency evidence should remain visible even when a model result is uncertain.
-- If no urgency-relevant evidence is available, the final behavior remains undefined until explicitly approved.
+- If no urgency-relevant evidence is available, the final behavior is defined by the approved v1 insufficient-evidence behavior documented below.
 
 Important distinctions:
 
