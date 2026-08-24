@@ -86,14 +86,21 @@ Therefore:
 
 ### Urgent
 
-Urgent is an approved application-level category.
+Urgent is an approved application-level urgency category for v1.
 
 No specific observable condition is currently documented or approved as an Urgent trigger.
 
+For v1, the assignment criteria for Urgent are intentionally undefined.
+
+This is an explicit specification decision and must not be interpreted as permission to infer or invent a clinical Urgent rule.
+
 Therefore:
 
-- Urgent assignment criteria remain undefined.
-- No unsupported clinical condition should be mapped to Urgent.
+- Urgent remains available as an application-level category.
+- No specific condition or observable sign is currently mapped to Urgent.
+- No model confidence threshold determines Urgent.
+- No Dog Eye condition is mapped to Urgent.
+- No fallback rule automatically assigns Urgent.
 
 ### Additional Emergency Evidence
 
