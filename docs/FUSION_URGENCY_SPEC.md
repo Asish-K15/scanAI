@@ -241,7 +241,6 @@ The following remain undefined and must not be invented:
 - Urgent assignment criteria
 - Additional Emergency evidence
 - Final behavior when no urgency-relevant evidence exists
-- Final recommendation schema
 - Mathematical fusion formula
 - Dog Eye severity mapping
 - Dog Eye urgency mapping
