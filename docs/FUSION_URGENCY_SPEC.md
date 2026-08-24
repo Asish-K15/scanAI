@@ -246,16 +246,47 @@ The following must not be introduced without explicit project approval:
 - mathematical fusion formulas presented as previously agreed requirements
 - unsupported clinical rules presented as existing ScanAI requirements
 
-## Output
+## Final Recommendation Schema
 
-Potential recommendation concepts include:
+The Fusion / Urgency output schema is approved at the field level.
 
-- severity
-- urgency
-- first-aid guidance
-- veterinary referral prompt
+The schema may contain:
 
-The exact final recommendation schema has not yet been finalized.
+- `species`
+- `body_area`
+- `condition`
+- `confidence`
+- `confidence_level`
+- `uncertain`
+- `severity`
+- `urgency`
+- `evidence_status`
+- `evidence`
+- `recommendation`
+
+### Field constraints
+
+- `species` identifies the species being evaluated.
+- `body_area` identifies the relevant body area.
+- `condition` records the identified condition/evidence.
+- `confidence` may contain numeric model confidence.
+- `confidence_level` may contain a categorical confidence representation if required by the project. Its categories and thresholds are not defined by this specification.
+- `uncertain` explicitly represents the existing uncertainty state.
+- `severity` may be present but must remain undefined/unpopulated when no approved severity rule or evidence exists.
+- `urgency` may be present but must remain undefined when no approved urgency evidence or rule exists.
+- `evidence_status` explicitly represents evidence states such as insufficient evidence.
+- `evidence` may preserve the supporting evidence behind the recommendation.
+- `recommendation` contains the user-facing recommendation without introducing new urgency or fusion rules.
+
+The presence of a field does not imply that a value must always be populated.
+
+This schema definition does not establish:
+
+- a fusion formula
+- confidence thresholds
+- disease-specific urgency mappings
+- Dog Eye severity/urgency mappings
+- additional urgency assignment rules
 
 ## Versioning
 
