@@ -68,14 +68,21 @@ Additional Emergency evidence remains undefined.
 
 ### Soon
 
-Soon is an approved application-level category.
+Soon is an approved application-level urgency category for v1.
 
 No specific observable condition is currently documented or approved as a Soon trigger.
 
+For v1, the assignment criteria for Soon are intentionally undefined.
+
+This is an explicit specification decision and must not be interpreted as permission to infer or invent a clinical Soon rule.
+
 Therefore:
 
-- Soon assignment criteria remain undefined.
-- No unsupported clinical condition should be mapped to Soon.
+- Soon remains available as an application-level category.
+- No specific condition or observable sign is currently mapped to Soon.
+- No model confidence threshold determines Soon.
+- No Dog Eye condition is mapped to Soon.
+- No fallback rule automatically assigns Soon.
 
 ### Urgent
 
