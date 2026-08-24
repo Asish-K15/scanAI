@@ -210,6 +210,22 @@ Therefore:
 
 No mathematical conflict-resolution or fusion rule has been approved.
 
+### Final Behavior for Unresolved Conflicts
+
+For v1, when conflicting evidence cannot be resolved using an explicitly approved rule:
+
+- The conflict must be explicitly represented in the recommendation/evidence output.
+- All relevant conflicting evidence must remain visible.
+- `urgency` must remain undefined (`None` in the implementation).
+- The system must not fall back to `Routine`, `Soon`, `Urgent`, or `Emergency`.
+- Model confidence must not be used to select a winning signal.
+- Dog Eye confidence thresholds must not be used as conflict-resolution thresholds.
+- No mathematical conflict-resolution or fusion rule may be introduced.
+
+An unresolved conflict is not equivalent to low severity or Routine. It represents an insufficient basis for determining a final urgency.
+
+This is a v1 specification decision and is frozen for v1.
+
 ## Dog Eye Confidence Thresholds
 
 The Dog Eye model currently exposes:
