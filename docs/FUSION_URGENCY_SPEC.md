@@ -170,6 +170,26 @@ Important distinctions:
 - uncertainty ≠ low severity
 - uncertainty ≠ high urgency
 
+### Final Behavior When No Urgency-Relevant Evidence Exists
+
+For v1, when no approved urgency-relevant evidence is available:
+
+- `evidence_status` must be `"insufficient_evidence"`.
+- `urgency` must remain undefined (`None` in the implementation).
+- The recommendation must communicate `"insufficient evidence / urgency undefined"`.
+- Existing model/output evidence must remain visible.
+- The system must not fall back to `Routine`, `Soon`, `Urgent`, or `Emergency`.
+- Model confidence and uncertainty must remain contextual and must not be converted into an urgency category.
+
+This behavior preserves the distinction between:
+
+- `Routine` as an approved low-risk endpoint
+- `insufficient_evidence` as an explicit absence of sufficient approved evidence for an urgency determination
+
+This is a v1 specification decision and is frozen for v1.
+
+This decision does not introduce a new clinical rule, urgency trigger, confidence threshold, or mathematical fusion formula.
+
 ## Conflicting Signals
 
 Conflicting evidence must be explicitly identified as a conflict in the recommendation layer.
