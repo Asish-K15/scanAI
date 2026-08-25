@@ -128,5 +128,58 @@ class TestPredictRoute(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(context.exception.status_code, 400)
 
 
+    async def test_corrupted_image_returns_400(self):
+        class FakeCorruptUpload:
+            content_type = "image/jpeg"
+
+            async def read(self):
+                return b"this is not a valid image"
+
+        image = FakeCorruptUpload()
+
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="dog",
+                body_area="eye",
+            )
+
+        self.assertEqual(context.exception.status_code, 400)
+
+
+    async def test_unsupported_model_route_returns_501(self):
+        image = FakeUploadFile()
+
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="cat",
+                body_area="eye",
+            )
+
+        self.assertEqual(context.exception.status_code, 501)
+
+
+    async def test_dog_eye_inference_failure_returns_500(self):
+        class FailingModel:
+            def predict(self, image):
+                raise RuntimeError("test inference failure")
+
+        image = FakeUploadFile()
+
+        with patch(
+            "app.routers.predict.get_dog_eye_model",
+            return_value=FailingModel(),
+        ):
+            with self.assertRaises(Exception) as context:
+                await predict(
+                    image=image,
+                    species="dog",
+                    body_area="eye",
+                )
+
+        self.assertEqual(context.exception.status_code, 500)
+
+
 if __name__ == "__main__":
     unittest.main()
