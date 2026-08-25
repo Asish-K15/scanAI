@@ -122,7 +122,44 @@ class TestFusionUrgency(unittest.TestCase):
         self.assertIsNone(
             urgency,
         )
+    def test_low_risk_evidence_creates_routine(self):
+        urgency = determine_urgency(
+            low_risk_evidence=True,
+        )
 
+        self.assertEqual(
+            urgency,
+            "Routine",
+        )
+
+    def test_low_risk_evidence_false_does_not_create_routine(self):
+        urgency = determine_urgency(
+            low_risk_evidence=False,
+        )
+
+        self.assertIsNone(
+            urgency,
+        )
+
+    def test_low_risk_evidence_absent_does_not_create_routine(self):
+        urgency = determine_urgency()
+
+        self.assertIsNone(
+            urgency,
+        )
+
+    def test_low_risk_evidence_does_not_override_emergency(self):
+        urgency = determine_urgency(
+            severity="severe",
+            condition="deep-tissue laceration",
+            active_hemorrhage=True,
+            low_risk_evidence=True,
+        )
+
+        self.assertEqual(
+            urgency,
+            "Emergency",
+        )
 
 if __name__ == "__main__":
     unittest.main()

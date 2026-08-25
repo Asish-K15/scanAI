@@ -10,9 +10,9 @@ Important:
 - Dog Eye conditions do not imply severity or urgency.
 - None urgency means insufficient approved evidence.
 - No general conflict hierarchy is implemented.
+- low_risk_evidence is an independently established upstream
+  technical input; this engine does not derive it.
 """
-
-
 
 
 URGENCY_CATEGORIES = {
@@ -31,6 +31,7 @@ def determine_urgency(
     active_hemorrhage: bool = False,
     confidence_level: str | None = None,
     evidence_status: str | None = None,
+    low_risk_evidence: bool | None = None,
 ) -> str | None:
     """
     Determine application urgency using only approved v1 rules.
@@ -41,12 +42,20 @@ def determine_urgency(
     None means that there is insufficient approved evidence to assign
     one of the four application urgency categories.
 
+    low_risk_evidence:
+        An independently established upstream/deterministic technical
+        input. The Fusion/Urgency engine does not derive this value
+        from Dog Eye condition, model confidence, confidence level,
+        or severity.
+
     The following are deliberately NOT implemented:
         - confidence -> urgency conversion
         - Dog Eye condition -> urgency
         - severity -> urgency mappings other than the approved rule
         - general conflict hierarchy
         - mathematical fusion of evidence
+        - Soon assignment
+        - Urgent assignment
     """
 
     # ---------------------------------------------------------
@@ -54,6 +63,10 @@ def determine_urgency(
     #
     # severe + deep-tissue laceration + active hemorrhage
     # -> Emergency
+    #
+    # Emergency is evaluated before Routine so that
+    # low_risk_evidence cannot override independently
+    # established Emergency evidence.
     # ---------------------------------------------------------
 
     if (
@@ -62,6 +75,19 @@ def determine_urgency(
         and active_hemorrhage
     ):
         return "Emergency"
+
+    # ---------------------------------------------------------
+    # Approved Routine rule
+    #
+    # low_risk_evidence=True means that an independent
+    # upstream/deterministic assessment has already established
+    # that the case meets the project's minor/low-risk criterion.
+    #
+    # This engine does not derive low_risk_evidence.
+    # ---------------------------------------------------------
+
+    if low_risk_evidence is True:
+        return "Routine"
 
     # ---------------------------------------------------------
     # Dog Eye v1
@@ -99,6 +125,8 @@ def determine_urgency(
 
     # ---------------------------------------------------------
     # No additional v1 urgency mappings are approved yet.
+    #
+    # Soon and Urgent remain intentionally undefined.
     # ---------------------------------------------------------
 
     return None
