@@ -54,6 +54,43 @@ The documented low-risk endpoint is:
 
 No additional Routine mappings are established.
 
+### Routine evidence input
+
+For v1, the Fusion/Urgency engine may consume the following technical
+evidence input:
+
+`low_risk_evidence`
+
+This input is an independently established upstream/deterministic
+application assessment.
+
+The Fusion/Urgency engine does not derive `low_risk_evidence` from:
+
+- Dog Eye condition
+- model confidence
+- model confidence level
+- clinical severity
+
+When `low_risk_evidence = true`, the already-established upstream
+assessment indicates that the case meets the project's minor/low-risk
+criterion, and the Fusion/Urgency engine may assign:
+
+`Routine`
+
+When `low_risk_evidence = false` or the input is absent, the Routine
+rule does not apply.
+
+The criteria used by an upstream component to establish
+`low_risk_evidence = true` are outside the Fusion/Urgency rules in this
+specification unless separately approved.
+
+`low_risk_evidence` must not override an independently established
+Emergency rule.
+
+This technical input does not define a new clinical classification,
+condition mapping, severity mapping, confidence threshold, or
+mathematical fusion rule.
+
 ### Emergency
 
 The currently approved Emergency mapping is:

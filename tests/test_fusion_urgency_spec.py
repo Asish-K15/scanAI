@@ -122,7 +122,7 @@ class TestFusionUrgencySpecification(unittest.TestCase):
         )
 
         self.assertIsNone(
-            undefined_urgency
+            undefined_urgency,
         )
 
     def test_insufficient_evidence_leaves_urgency_undefined(self):
@@ -135,16 +135,21 @@ class TestFusionUrgencySpecification(unittest.TestCase):
         )
 
         self.assertIsNone(
-            urgency
+            urgency,
         )
 
     def test_severe_laceration_with_active_hemorrhage_is_emergency(self):
         severity = "severe"
+        condition = "deep-tissue laceration"
         active_hemorrhage = True
 
         urgency = None
 
-        if severity == "severe" and active_hemorrhage:
+        if (
+            severity == "severe"
+            and condition == "deep-tissue laceration"
+            and active_hemorrhage
+        ):
             urgency = "Emergency"
 
         self.assertEqual(
@@ -156,11 +161,16 @@ class TestFusionUrgencySpecification(unittest.TestCase):
         model_confidence_level = "low"
 
         severity = "severe"
+        condition = "deep-tissue laceration"
         active_hemorrhage = True
 
         urgency = None
 
-        if severity == "severe" and active_hemorrhage:
+        if (
+            severity == "severe"
+            and condition == "deep-tissue laceration"
+            and active_hemorrhage
+        ):
             urgency = "Emergency"
 
         self.assertEqual(
@@ -177,7 +187,76 @@ class TestFusionUrgencySpecification(unittest.TestCase):
         conflict_resolution_defined = False
 
         self.assertFalse(
-            conflict_resolution_defined
+            conflict_resolution_defined,
+        )
+
+    def test_low_risk_evidence_is_upstream_technical_input(self):
+        low_risk_evidence = True
+
+        self.assertTrue(
+            low_risk_evidence,
+        )
+
+        derived_from_model = False
+        derived_from_confidence = False
+        derived_from_severity = False
+
+        self.assertFalse(
+            derived_from_model,
+        )
+
+        self.assertFalse(
+            derived_from_confidence,
+        )
+
+        self.assertFalse(
+            derived_from_severity,
+        )
+
+    def test_low_risk_evidence_false_does_not_apply_routine(self):
+        low_risk_evidence = False
+
+        urgency = None
+
+        if low_risk_evidence:
+            urgency = "Routine"
+
+        self.assertIsNone(
+            urgency,
+        )
+
+    def test_low_risk_evidence_absent_does_not_apply_routine(self):
+        low_risk_evidence = None
+
+        urgency = None
+
+        if low_risk_evidence is True:
+            urgency = "Routine"
+
+        self.assertIsNone(
+            urgency,
+        )
+
+    def test_low_risk_evidence_does_not_override_emergency(self):
+        low_risk_evidence = True
+        severity = "severe"
+        condition = "deep-tissue laceration"
+        active_hemorrhage = True
+
+        urgency = None
+
+        if (
+            severity == "severe"
+            and condition == "deep-tissue laceration"
+            and active_hemorrhage
+        ):
+            urgency = "Emergency"
+        elif low_risk_evidence is True:
+            urgency = "Routine"
+
+        self.assertEqual(
+            urgency,
+            "Emergency",
         )
 
 
