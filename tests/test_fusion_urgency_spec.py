@@ -106,7 +106,26 @@ class TestFusionUrgencySpecification(unittest.TestCase):
 
         self.assertIsNone(severity)
 
-    def test_insufficient_evidence_leaves_urgency_null(self):
+    def test_undefined_urgency_is_not_an_urgency_category(self):
+        urgency_categories = {
+            "Routine",
+            "Soon",
+            "Urgent",
+            "Emergency",
+        }
+
+        undefined_urgency = None
+
+        self.assertNotIn(
+            undefined_urgency,
+            urgency_categories,
+        )
+
+        self.assertIsNone(
+            undefined_urgency
+        )
+
+    def test_insufficient_evidence_leaves_urgency_undefined(self):
         evidence_status = "insufficient_evidence"
         urgency = None
 
@@ -114,7 +133,10 @@ class TestFusionUrgencySpecification(unittest.TestCase):
             evidence_status,
             "insufficient_evidence",
         )
-        self.assertIsNone(urgency)
+
+        self.assertIsNone(
+            urgency
+        )
 
     def test_severe_laceration_with_active_hemorrhage_is_emergency(self):
         severity = "severe"
