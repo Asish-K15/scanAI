@@ -83,5 +83,50 @@ class TestPredictRoute(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(result["evidence"]["screening_only"])
 
 
+    async def test_invalid_species_returns_400(self):
+        image = FakeUploadFile()
+
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="horse",
+                body_area="eye",
+            )
+
+        self.assertEqual(context.exception.status_code, 400)
+
+
+    async def test_invalid_body_area_returns_400(self):
+        image = FakeUploadFile()
+
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="dog",
+                body_area="heart",
+            )
+
+        self.assertEqual(context.exception.status_code, 400)
+
+
+    async def test_non_image_upload_returns_400(self):
+        class FakeTextUpload:
+            content_type = "text/plain"
+
+            async def read(self):
+                return b"not an image"
+
+        image = FakeTextUpload()
+
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="dog",
+                body_area="eye",
+            )
+
+        self.assertEqual(context.exception.status_code, 400)
+
+
 if __name__ == "__main__":
     unittest.main()
