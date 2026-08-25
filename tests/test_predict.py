@@ -181,5 +181,93 @@ class TestPredictRoute(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(context.exception.status_code, 500)
 
 
+    async def test_dog_eye_response_matches_expected_contract(self):
+        image = FakeUploadFile()
+
+        with patch(
+            "app.routers.predict.get_dog_eye_model",
+            return_value=FakeModel(),
+        ):
+            result = await predict(
+                image=image,
+                species="dog",
+                body_area="eye",
+            )
+
+        expected_top_level_keys = {
+            "species",
+            "body_area",
+            "condition",
+            "confidence",
+            "confidence_level",
+            "uncertain",
+            "severity",
+            "urgency",
+            "evidence_status",
+            "evidence",
+            "recommendation",
+        }
+
+        self.assertEqual(
+            set(result.keys()),
+            expected_top_level_keys,
+        )
+
+        self.assertIsInstance(result["species"], str)
+        self.assertIsInstance(result["body_area"], str)
+        self.assertIsInstance(result["condition"], str)
+        self.assertIsInstance(result["confidence"], float)
+        self.assertIsInstance(result["confidence_level"], str)
+        self.assertIsInstance(result["uncertain"], bool)
+        self.assertIsNone(result["severity"])
+        self.assertIsNone(result["urgency"])
+        self.assertIsInstance(result["evidence_status"], str)
+        self.assertIsInstance(result["evidence"], dict)
+        self.assertIsInstance(result["recommendation"], str)
+
+        expected_evidence_keys = {
+            "condition",
+            "confidence",
+            "confidence_level",
+            "uncertain",
+            "probabilities",
+            "model",
+            "model_version",
+            "engine",
+            "screening_only",
+        }
+
+        self.assertEqual(
+            set(result["evidence"].keys()),
+            expected_evidence_keys,
+        )
+
+        self.assertEqual(
+            set(result["evidence"]["probabilities"].keys()),
+            {
+                "conjunctivitis",
+                "entropion",
+            },
+        )
+
+        self.assertIsInstance(
+            result["evidence"]["probabilities"]["conjunctivitis"],
+            float,
+        )
+        self.assertIsInstance(
+            result["evidence"]["probabilities"]["entropion"],
+            float,
+        )
+
+        self.assertEqual(
+            result["evidence_status"],
+            "insufficient_evidence",
+        )
+        self.assertEqual(
+            result["recommendation"],
+            "insufficient evidence / urgency undefined",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
