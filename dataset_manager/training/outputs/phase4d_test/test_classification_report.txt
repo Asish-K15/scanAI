@@ -1,0 +1,54 @@
+SCANAI ANIMAL SKIN
+PHASE 4D - FINAL TEST EVALUATION
+
+Test images: 1107
+Accuracy: 0.909666
+Macro Precision: 0.888242
+Macro Recall: 0.910653
+Macro F1: 0.897126
+Weighted F1: 0.911126
+
+CLASSIFICATION REPORT
+=====================
+
+                              precision    recall  f1-score   support
+
+   skin__allergic_dermatitis       0.87      0.84      0.86        90
+skin__foot_and_mouth_disease       0.98      0.96      0.97       113
+      skin__fungal_infection       0.84      0.89      0.86        79
+          skin__healthy_skin       0.79      0.99      0.88        84
+               skin__hotspot       0.75      0.89      0.82        75
+    skin__lumpy_skin_disease       0.99      0.91      0.95       225
+                 skin__mange       0.99      0.89      0.94       150
+              skin__pyoderma       0.81      0.85      0.83        46
+              skin__ringworm       0.94      0.90      0.92       198
+               skin__scabies       0.92      0.98      0.95        47
+
+                    accuracy                           0.91      1107
+                   macro avg       0.89      0.91      0.90      1107
+                weighted avg       0.92      0.91      0.91      1107
+
+
+TOP CONFUSION PAIRS
+===================
+
+skin__lumpy_skin_disease -> skin__healthy_skin : 19
+skin__ringworm -> skin__hotspot : 8
+skin__allergic_dermatitis -> skin__hotspot : 6
+skin__fungal_infection -> skin__allergic_dermatitis : 4
+skin__mange -> skin__fungal_infection : 4
+skin__mange -> skin__ringworm : 4
+skin__allergic_dermatitis -> skin__fungal_infection : 3
+skin__allergic_dermatitis -> skin__ringworm : 3
+skin__hotspot -> skin__pyoderma : 3
+skin__mange -> skin__allergic_dermatitis : 3
+skin__mange -> skin__hotspot : 3
+skin__pyoderma -> skin__hotspot : 3
+skin__ringworm -> skin__scabies : 3
+skin__foot_and_mouth_disease -> skin__healthy_skin : 2
+skin__fungal_infection -> skin__hotspot : 2
+skin__fungal_infection -> skin__pyoderma : 2
+skin__hotspot -> skin__fungal_infection : 2
+skin__hotspot -> skin__ringworm : 2
+skin__pyoderma -> skin__fungal_infection : 2
+skin__ringworm -> skin__allergic_dermatitis : 2

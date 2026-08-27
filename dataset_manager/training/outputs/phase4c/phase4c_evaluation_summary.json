@@ -1,0 +1,190 @@
+{
+  "phase": "4C",
+  "model": "EfficientNet-B0",
+  "checkpoint": "C:\\Users\\ashis\\Desktop\\ScanAI\\dataset_manager\\training\\outputs\\phase4b\\checkpoints\\efficientnet_b0_phase4b_best.pth",
+  "validation_images": 1088,
+  "accuracy": 0.8731617647058824,
+  "macro_precision": 0.8431939251013052,
+  "macro_recall": 0.848320956280913,
+  "macro_f1": 0.8432493155760469,
+  "weighted_f1": 0.8742429016055472,
+  "best_phase4b_macro_f1": 0.8432,
+  "phase2_macro_f1": 0.8135,
+  "phase4a_macro_f1": 0.7951,
+  "improvement_over_phase2": 0.029749315576046875,
+  "improvement_over_phase4a": 0.04814931557604685,
+  "most_confused_pairs": [
+    {
+      "actual": "lumpy_skin_disease",
+      "predicted": "healthy_skin",
+      "count": 17
+    },
+    {
+      "actual": "ringworm",
+      "predicted": "hotspot",
+      "count": 8
+    },
+    {
+      "actual": "mange",
+      "predicted": "hotspot",
+      "count": 7
+    },
+    {
+      "actual": "pyoderma",
+      "predicted": "hotspot",
+      "count": 7
+    },
+    {
+      "actual": "allergic_dermatitis",
+      "predicted": "hotspot",
+      "count": 6
+    },
+    {
+      "actual": "fungal_infection",
+      "predicted": "allergic_dermatitis",
+      "count": 6
+    },
+    {
+      "actual": "hotspot",
+      "predicted": "pyoderma",
+      "count": 6
+    },
+    {
+      "actual": "allergic_dermatitis",
+      "predicted": "ringworm",
+      "count": 5
+    },
+    {
+      "actual": "fungal_infection",
+      "predicted": "hotspot",
+      "count": 5
+    },
+    {
+      "actual": "fungal_infection",
+      "predicted": "ringworm",
+      "count": 5
+    },
+    {
+      "actual": "mange",
+      "predicted": "fungal_infection",
+      "count": 5
+    },
+    {
+      "actual": "hotspot",
+      "predicted": "ringworm",
+      "count": 4
+    },
+    {
+      "actual": "mange",
+      "predicted": "ringworm",
+      "count": 4
+    },
+    {
+      "actual": "allergic_dermatitis",
+      "predicted": "fungal_infection",
+      "count": 3
+    },
+    {
+      "actual": "pyoderma",
+      "predicted": "fungal_infection",
+      "count": 3
+    },
+    {
+      "actual": "pyoderma",
+      "predicted": "ringworm",
+      "count": 3
+    },
+    {
+      "actual": "ringworm",
+      "predicted": "allergic_dermatitis",
+      "count": 3
+    },
+    {
+      "actual": "ringworm",
+      "predicted": "pyoderma",
+      "count": 3
+    },
+    {
+      "actual": "ringworm",
+      "predicted": "scabies",
+      "count": 3
+    },
+    {
+      "actual": "foot_and_mouth_disease",
+      "predicted": "healthy_skin",
+      "count": 2
+    }
+  ],
+  "per_class": [
+    {
+      "class": "allergic_dermatitis",
+      "precision": 0.8235294117647058,
+      "recall": 0.7954545454545454,
+      "f1": 0.8092485549132948,
+      "support": 88
+    },
+    {
+      "class": "foot_and_mouth_disease",
+      "precision": 0.972972972972973,
+      "recall": 0.9642857142857143,
+      "f1": 0.968609865470852,
+      "support": 112
+    },
+    {
+      "class": "fungal_infection",
+      "precision": 0.7910447761194029,
+      "recall": 0.7162162162162162,
+      "f1": 0.75177304964539,
+      "support": 74
+    },
+    {
+      "class": "healthy_skin",
+      "precision": 0.7941176470588235,
+      "recall": 0.9642857142857143,
+      "f1": 0.8709677419354839,
+      "support": 84
+    },
+    {
+      "class": "hotspot",
+      "precision": 0.6344086021505376,
+      "recall": 0.7972972972972973,
+      "f1": 0.7065868263473054,
+      "support": 74
+    },
+    {
+      "class": "lumpy_skin_disease",
+      "precision": 0.9711538461538461,
+      "recall": 0.9223744292237442,
+      "f1": 0.9461358313817331,
+      "support": 219
+    },
+    {
+      "class": "mange",
+      "precision": 0.948905109489051,
+      "recall": 0.8666666666666667,
+      "f1": 0.9059233449477352,
+      "support": 150
+    },
+    {
+      "class": "pyoderma",
+      "precision": 0.7105263157894737,
+      "recall": 0.627906976744186,
+      "f1": 0.6666666666666666,
+      "support": 43
+    },
+    {
+      "class": "ringworm",
+      "precision": 0.8894472361809045,
+      "recall": 0.8939393939393939,
+      "f1": 0.8916876574307305,
+      "support": 198
+    },
+    {
+      "class": "scabies",
+      "precision": 0.8958333333333334,
+      "recall": 0.9347826086956522,
+      "f1": 0.9148936170212766,
+      "support": 46
+    }
+  ]
+}

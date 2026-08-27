@@ -1,0 +1,62 @@
+{
+  "model": "EfficientNet-B0",
+  "model_version": "SCANAI-SKIN-PHASE4B",
+  "best_epoch": 9,
+  "input_name": "image",
+  "output_name": "logits",
+  "input_shape": [
+    "batch",
+    3,
+    224,
+    224
+  ],
+  "num_classes": 10,
+  "classes": [
+    "skin__allergic_dermatitis",
+    "skin__foot_and_mouth_disease",
+    "skin__fungal_infection",
+    "skin__healthy_skin",
+    "skin__hotspot",
+    "skin__lumpy_skin_disease",
+    "skin__mange",
+    "skin__pyoderma",
+    "skin__ringworm",
+    "skin__scabies"
+  ],
+  "preprocessing": {
+    "color": "RGB",
+    "resize": [
+      224,
+      224
+    ],
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "architecture": {
+    "backbone": "EfficientNet-B0",
+    "early_blocks": "frozen",
+    "last_two_blocks": "trainable",
+    "classifier": "trainable"
+  },
+  "validation": {
+    "accuracy": 0.8732,
+    "macro_f1": 0.8432
+  },
+  "test": {
+    "images": 1107,
+    "accuracy": 0.9097,
+    "macro_f1": 0.8971,
+    "macro_precision": 0.8882,
+    "macro_recall": 0.9107,
+    "weighted_f1": 0.9111
+  },
+  "screening_only": true
+}

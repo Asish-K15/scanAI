@@ -1,0 +1,11 @@
+actual,allergic_dermatitis,foot_and_mouth_disease,fungal_infection,healthy_skin,hotspot,lumpy_skin_disease,mange,pyoderma,ringworm,scabies
+allergic_dermatitis,70,0,3,0,6,1,1,1,5,1
+foot_and_mouth_disease,0,108,0,2,0,1,0,0,1,0
+fungal_infection,6,0,53,1,5,1,2,1,5,0
+healthy_skin,0,1,0,81,0,2,0,0,0,0
+hotspot,2,1,2,0,59,0,0,6,4,0
+lumpy_skin_disease,0,0,0,17,0,202,0,0,0,0
+mange,2,0,5,0,7,1,130,0,4,1
+pyoderma,2,0,3,0,7,0,1,27,3,0
+ringworm,3,1,1,0,8,0,2,3,177,3
+scabies,0,0,0,1,1,0,1,0,0,43

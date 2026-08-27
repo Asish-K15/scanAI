@@ -1,0 +1,214 @@
+{
+  "phase": "4D",
+  "evaluation": "final_untouched_test",
+  "model": "EfficientNet-B0",
+  "model_version": "SCANAI-SKIN-PHASE4B",
+  "checkpoint": "C:\\Users\\ashis\\Desktop\\ScanAI\\dataset_manager\\training\\outputs\\phase4b\\checkpoints\\efficientnet_b0_phase4b_best.pth",
+  "best_epoch": 9,
+  "validation_macro_f1": 0.8432,
+  "previous_phase2_macro_f1": 0.8135,
+  "test_images": 1107,
+  "test_class_counts": {
+    "skin__allergic_dermatitis": 90,
+    "skin__foot_and_mouth_disease": 113,
+    "skin__fungal_infection": 79,
+    "skin__healthy_skin": 84,
+    "skin__hotspot": 75,
+    "skin__lumpy_skin_disease": 225,
+    "skin__mange": 150,
+    "skin__pyoderma": 46,
+    "skin__ringworm": 198,
+    "skin__scabies": 47
+  },
+  "accuracy": 0.9096657633242999,
+  "macro_precision": 0.8882417019576065,
+  "macro_recall": 0.9106534569797795,
+  "macro_f1": 0.8971260697402821,
+  "weighted_f1": 0.9111262829728436,
+  "improvement_over_phase2_test_not_comparable": true,
+  "confidence_statistics": {
+    "mean": 0.8881521042446457,
+    "median": 0.9660332798957825,
+    "min": 0.23808854818344116,
+    "max": 0.9999963045120239,
+    "below_50_percent": 53,
+    "50_to_70_percent": 97,
+    "70_to_80_percent": 75,
+    "80_to_90_percent": 120,
+    "90_percent_or_higher": 762
+  },
+  "most_confused_pairs": [
+    {
+      "actual": "skin__lumpy_skin_disease",
+      "predicted": "skin__healthy_skin",
+      "count": 19
+    },
+    {
+      "actual": "skin__ringworm",
+      "predicted": "skin__hotspot",
+      "count": 8
+    },
+    {
+      "actual": "skin__allergic_dermatitis",
+      "predicted": "skin__hotspot",
+      "count": 6
+    },
+    {
+      "actual": "skin__fungal_infection",
+      "predicted": "skin__allergic_dermatitis",
+      "count": 4
+    },
+    {
+      "actual": "skin__mange",
+      "predicted": "skin__fungal_infection",
+      "count": 4
+    },
+    {
+      "actual": "skin__mange",
+      "predicted": "skin__ringworm",
+      "count": 4
+    },
+    {
+      "actual": "skin__allergic_dermatitis",
+      "predicted": "skin__fungal_infection",
+      "count": 3
+    },
+    {
+      "actual": "skin__allergic_dermatitis",
+      "predicted": "skin__ringworm",
+      "count": 3
+    },
+    {
+      "actual": "skin__hotspot",
+      "predicted": "skin__pyoderma",
+      "count": 3
+    },
+    {
+      "actual": "skin__mange",
+      "predicted": "skin__allergic_dermatitis",
+      "count": 3
+    },
+    {
+      "actual": "skin__mange",
+      "predicted": "skin__hotspot",
+      "count": 3
+    },
+    {
+      "actual": "skin__pyoderma",
+      "predicted": "skin__hotspot",
+      "count": 3
+    },
+    {
+      "actual": "skin__ringworm",
+      "predicted": "skin__scabies",
+      "count": 3
+    },
+    {
+      "actual": "skin__foot_and_mouth_disease",
+      "predicted": "skin__healthy_skin",
+      "count": 2
+    },
+    {
+      "actual": "skin__fungal_infection",
+      "predicted": "skin__hotspot",
+      "count": 2
+    },
+    {
+      "actual": "skin__fungal_infection",
+      "predicted": "skin__pyoderma",
+      "count": 2
+    },
+    {
+      "actual": "skin__hotspot",
+      "predicted": "skin__fungal_infection",
+      "count": 2
+    },
+    {
+      "actual": "skin__hotspot",
+      "predicted": "skin__ringworm",
+      "count": 2
+    },
+    {
+      "actual": "skin__pyoderma",
+      "predicted": "skin__fungal_infection",
+      "count": 2
+    },
+    {
+      "actual": "skin__ringworm",
+      "predicted": "skin__allergic_dermatitis",
+      "count": 2
+    }
+  ],
+  "per_class": [
+    {
+      "class": "skin__allergic_dermatitis",
+      "precision": 0.8735632183908046,
+      "recall": 0.8444444444444444,
+      "f1": 0.8587570621468926,
+      "support": 90
+    },
+    {
+      "class": "skin__foot_and_mouth_disease",
+      "precision": 0.9819819819819819,
+      "recall": 0.9646017699115044,
+      "f1": 0.9732142857142857,
+      "support": 113
+    },
+    {
+      "class": "skin__fungal_infection",
+      "precision": 0.8433734939759037,
+      "recall": 0.8860759493670886,
+      "f1": 0.8641975308641975,
+      "support": 79
+    },
+    {
+      "class": "skin__healthy_skin",
+      "precision": 0.7904761904761904,
+      "recall": 0.9880952380952381,
+      "f1": 0.8783068783068783,
+      "support": 84
+    },
+    {
+      "class": "skin__hotspot",
+      "precision": 0.7528089887640449,
+      "recall": 0.8933333333333333,
+      "f1": 0.8170731707317073,
+      "support": 75
+    },
+    {
+      "class": "skin__lumpy_skin_disease",
+      "precision": 0.9855769230769231,
+      "recall": 0.9111111111111111,
+      "f1": 0.9468822170900693,
+      "support": 225
+    },
+    {
+      "class": "skin__mange",
+      "precision": 0.9852941176470589,
+      "recall": 0.8933333333333333,
+      "f1": 0.9370629370629371,
+      "support": 150
+    },
+    {
+      "class": "skin__pyoderma",
+      "precision": 0.8125,
+      "recall": 0.8478260869565217,
+      "f1": 0.8297872340425532,
+      "support": 46
+    },
+    {
+      "class": "skin__ringworm",
+      "precision": 0.9368421052631579,
+      "recall": 0.898989898989899,
+      "f1": 0.9175257731958762,
+      "support": 198
+    },
+    {
+      "class": "skin__scabies",
+      "precision": 0.92,
+      "recall": 0.9787234042553191,
+      "f1": 0.9484536082474226,
+      "support": 47
+    }
+  ]
+}

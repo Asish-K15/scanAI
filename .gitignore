@@ -6,6 +6,7 @@
 __pycache__/
 *.pyc
 *.pyo
+*.py[cod]
 
 # ============================================================
 # DATASET - LARGE / GENERATED DATA
@@ -24,6 +25,22 @@ dataset_manager/metadata/expansion_backup/
 dataset_manager/outputs/
 dataset_manager/metadata/expansion_checks/
 
+# Dataset backup / generated large datasets
+dataset_manager/backup_roboflow/
+dataset_manager/baseline_clean/
+dataset_manager/reviewed_clean/
+dataset_manager/reviewed_quality_clean/
+dataset_manager/splits/
+dataset_manager/splits_phase4/
+
+# Generated dataset metadata
+dataset_manager/metadata/dataset_inventory.csv
+dataset_manager/metadata/safe_duplicate_removals.csv
+dataset_manager/metadata/split_manifest.csv
+dataset_manager/metadata/split_summary.csv
+dataset_manager/metadata/baseline_exclude_classes.txt
+dataset_manager/metadata/cross_class_quarantine.csv
+
 # ============================================================
 # MODEL CHECKPOINTS
 # ============================================================
@@ -31,6 +48,11 @@ dataset_manager/metadata/expansion_checks/
 dog_eye_model/outputs/checkpoints/*.pth
 dog_eye_model/outputs/checkpoints/*.pt
 dog_eye_model/outputs/checkpoints/*.onnx
+
+# ScanAI Skin training checkpoints
+dataset_manager/training/outputs/checkpoints/
+dataset_manager/training/outputs/phase4/checkpoints/
+dataset_manager/training/outputs/phase4b/checkpoints/
 
 # ============================================================
 # GENERATED MODEL OUTPUTS
@@ -45,6 +67,10 @@ dog_eye_model/outputs/plots/
 # ============================================================
 
 dog_eye_model/outputs/predictions/finetune_change_review/
+
+# ScanAI Skin temporary visual review images
+dataset_manager/training/outputs/*/visual_review/
+dataset_manager/training/outputs/*/*.jpg
 
 # ============================================================
 # OTHER LARGE / GENERATED ROOT OUTPUTS
@@ -61,14 +87,5 @@ outputs/
 .idea/
 .DS_Store
 Thumbs.db
-dog_eye_model/scanai_dog_eye_v1_onnx_artifact.zip
 
-dataset_manager/backup_roboflow/
-dataset_manager/baseline_clean/
-dataset_manager/splits/
-dataset_manager/metadata/dataset_inventory.csv
-dataset_manager/metadata/safe_duplicate_removals.csv
-dataset_manager/metadata/split_manifest.csv
-dataset_manager/metadata/split_summary.csv
-dataset_manager/metadata/baseline_exclude_classes.txt
-dataset_manager/metadata/cross_class_quarantine.csv
+dog_eye_model/scanai_dog_eye_v1_onnx_artifact.zip

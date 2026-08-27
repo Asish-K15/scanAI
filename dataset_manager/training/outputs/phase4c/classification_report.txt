@@ -1,0 +1,54 @@
+SCANAI ANIMAL SKIN
+PHASE 4C - DETAILED VALIDATION EVALUATION
+
+Validation images: 1088
+Accuracy: 0.873162
+Macro Precision: 0.843194
+Macro Recall: 0.848321
+Macro F1: 0.843249
+Weighted F1: 0.874243
+
+CLASSIFICATION REPORT
+=====================
+
+                        precision    recall  f1-score   support
+
+   allergic_dermatitis       0.82      0.80      0.81        88
+foot_and_mouth_disease       0.97      0.96      0.97       112
+      fungal_infection       0.79      0.72      0.75        74
+          healthy_skin       0.79      0.96      0.87        84
+               hotspot       0.63      0.80      0.71        74
+    lumpy_skin_disease       0.97      0.92      0.95       219
+                 mange       0.95      0.87      0.91       150
+              pyoderma       0.71      0.63      0.67        43
+              ringworm       0.89      0.89      0.89       198
+               scabies       0.90      0.93      0.91        46
+
+              accuracy                           0.87      1088
+             macro avg       0.84      0.85      0.84      1088
+          weighted avg       0.88      0.87      0.87      1088
+
+
+MOST CONFUSED PAIRS
+===================
+
+lumpy_skin_disease -> healthy_skin : 17
+ringworm -> hotspot : 8
+mange -> hotspot : 7
+pyoderma -> hotspot : 7
+allergic_dermatitis -> hotspot : 6
+fungal_infection -> allergic_dermatitis : 6
+hotspot -> pyoderma : 6
+allergic_dermatitis -> ringworm : 5
+fungal_infection -> hotspot : 5
+fungal_infection -> ringworm : 5
+mange -> fungal_infection : 5
+hotspot -> ringworm : 4
+mange -> ringworm : 4
+allergic_dermatitis -> fungal_infection : 3
+pyoderma -> fungal_infection : 3
+pyoderma -> ringworm : 3
+ringworm -> allergic_dermatitis : 3
+ringworm -> pyoderma : 3
+ringworm -> scabies : 3
+foot_and_mouth_disease -> healthy_skin : 2
