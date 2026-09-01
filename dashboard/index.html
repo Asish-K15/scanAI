@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ScanAI — Animal Health Screening</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div>
+                <h1>ScanAI</h1>
+                <p>Animal Health Screening</p>
+            </div>
+        </div>
+
+        <div class="api-status">
+            <span class="status-dot"></span>
+            API Ready
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <section class="hero">
+            <div>
+                <span class="eyebrow">AI-POWERED SCREENING</span>
+
+                <h2>
+                    Screen your animal's
+                    <span>health condition</span>
+                </h2>
+
+                <p>
+                    Upload an image and provide the animal and body-area
+                    information to receive an AI screening result.
+                </p>
+            </div>
+        </section>
+
+
+        <section class="scanner-card">
+
+            <div class="card-header">
+                <div>
+                    <h3>New Screening</h3>
+                    <p>Provide the required information below.</p>
+                </div>
+
+                <span class="step-badge">STEP 1</span>
+            </div>
+
+
+            <form id="predictionForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="species">Animal Species</label>
+
+                        <select id="species" name="species" required>
+                            <option value="">Select species</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="bodyArea">Body Area</label>
+
+                        <select id="bodyArea" name="body_area" required>
+                            <option value="">Select body area</option>
+                            <option value="eye">Eye</option>
+                            <option value="skin">Skin</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <div class="upload-area" id="uploadArea">
+
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept="image/*"
+                        hidden
+                        required
+                    >
+
+                    <div id="uploadContent">
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <h4>Upload an animal image</h4>
+
+                        <p>
+                            Drag and drop an image here or
+                            <button type="button" id="browseButton">
+                                browse
+                            </button>
+                        </p>
+
+                        <small>
+                            JPG, JPEG, PNG or WEBP
+                        </small>
+
+                    </div>
+
+
+                    <div id="previewContainer" class="preview-container hidden">
+
+                        <img id="imagePreview" alt="Selected animal">
+
+                        <div class="preview-info">
+                            <strong id="fileName"></strong>
+                            <button
+                                type="button"
+                                id="removeImage"
+                                class="remove-button"
+                            >
+                                Remove
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    id="analyzeButton"
+                    class="analyze-button"
+                >
+                    Analyze Image
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <section
+            id="loading"
+            class="message-card hidden"
+        >
+            <div class="loader"></div>
+
+            <div>
+                <h3>Analyzing image...</h3>
+                <p>
+                    ScanAI is processing the uploaded image.
+                </p>
+            </div>
+        </section>
+
+
+        <section
+            id="errorMessage"
+            class="message-card error hidden"
+        >
+            <div class="message-icon">!</div>
+
+            <div>
+                <h3>Unable to complete screening</h3>
+                <p id="errorText">
+                    Something went wrong.
+                </p>
+            </div>
+        </section>
+
+
+        <section
+            id="resultCard"
+            class="result-card hidden"
+        >
+
+            <div class="result-header">
+
+                <div>
+                    <span class="eyebrow">SCREENING RESULT</span>
+
+                    <h3 id="resultCondition">
+                        —
+                    </h3>
+                </div>
+
+                <span
+                    id="confidenceBadge"
+                    class="confidence-badge"
+                >
+                    —
+                </span>
+
+            </div>
+
+
+            <div class="result-grid">
+
+                <div class="result-item">
+                    <span>Species</span>
+                    <strong id="resultSpecies">—</strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Body Area</span>
+                    <strong id="resultBodyArea">—</strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Confidence</span>
+                    <strong id="resultConfidence">—</strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Confidence Level</span>
+                    <strong id="resultConfidenceLevel">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="uncertainty-box">
+
+                <strong>Screening interpretation</strong>
+
+                <p id="uncertaintyText">
+                    —
+                </p>
+
+            </div>
+
+
+            <div class="clinical-grid">
+
+                <div class="clinical-item">
+                    <span>Severity</span>
+                    <strong id="resultSeverity">—</strong>
+                </div>
+
+                <div class="clinical-item">
+                    <span>Urgency</span>
+                    <strong id="resultUrgency">—</strong>
+                </div>
+
+                <div class="clinical-item">
+                    <span>Evidence Status</span>
+                    <strong id="resultEvidenceStatus">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="recommendation-box">
+
+                <span>Recommendation</span>
+
+                <p id="resultRecommendation">
+                    —
+                </p>
+
+            </div>
+
+
+            <details class="evidence-details">
+
+                <summary>
+                    View model evidence
+                </summary>
+
+                <pre id="evidenceOutput"></pre>
+
+            </details>
+
+
+            <button
+                type="button"
+                id="newScreening"
+                class="secondary-button"
+            >
+                Start New Screening
+            </button>
+
+        </section>
+
+
+        <section class="disclaimer">
+
+            <strong>Important</strong>
+
+            <p>
+                ScanAI provides AI-based animal health screening information.
+                It is not a clinical diagnosis and should not replace
+                evaluation by a qualified veterinary professional.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>ScanAI API · Animal Health Screening</p>
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
