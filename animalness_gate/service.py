@@ -46,6 +46,11 @@ class AnimalnessGateConfig:
             "cuda" if torch.cuda.is_available() else "cpu"
         )
 
+    @property
+    def is_threshold_configured(self) -> bool:
+        """Returns True only when an explicit animalness threshold has been configured."""
+        return self.animal_threshold is not None
+
 
 class AnimalnessGateService:
     """
@@ -200,9 +205,6 @@ class AnimalnessGateService:
         self,
         image: Union[Image.Image, bytes, BinaryIO, str, Path],
         selected_species: str,
-        *,
-        is_human: bool = False,
-        hint: Optional[str] = None,
     ) -> Dict:
         """
         Validate that an uploaded image contains a supported animal and that
@@ -249,7 +251,6 @@ class AnimalnessGateService:
                 gate_logits = self._gate_model(tensor)
                 gate_probs = torch.softmax(gate_logits, dim=1)[0]
                 animal_probability = float(gate_probs[0].item())
-                not_animal_probability = float(gate_probs[1].item())
 
                 # Species validator model
                 species_logits = self._species_model(tensor)
@@ -270,7 +271,21 @@ class AnimalnessGateService:
                 error_code=str(exc),
             ).model_dump()
 
-        # 4. Check for uncertainty (preserve concept of uncertainty without inventing hardcoded threshold)
+        # 4. Enforce PRD requirement: No implicit fallback threshold.
+        # If no approved production animalness threshold is configured, return UNCERTAIN with LOW_CONFIDENCE.
+        if not self.config.is_threshold_configured:
+            return AnimalnessGateResponse(
+                decision=GateDecision.UNCERTAIN,
+                predicted_species=predicted_species,
+                species_confidence=species_confidence,
+                animal_probability=animal_probability,
+                model_name=self.MODEL_NAME,
+                model_version=self.MODEL_VERSION,
+                reason_code=GateReasonCode.LOW_CONFIDENCE,
+                error_code=None,
+            ).model_dump()
+
+        # 5. Check uncertainty bounds or species confidence threshold if configured
         is_uncertain = False
         if (
             self.config.uncertainty_min is not None
@@ -297,19 +312,10 @@ class AnimalnessGateService:
                 error_code=None,
             ).model_dump()
 
-        # 5. Determine animalness
-        is_animal = (
-            animal_probability >= self.config.animal_threshold
-            if self.config.animal_threshold is not None
-            else animal_probability >= not_animal_probability
-        )
-
-        if not is_animal:
-            reason = (
-                GateReasonCode.HUMAN_DETECTED
-                if (is_human or hint == "human")
-                else GateReasonCode.NON_ANIMAL_DETECTED
-            )
+        # 6. Evaluate animalness against the explicitly configured threshold.
+        # The binary model separates animals from non-animals (including humans and objects).
+        # In the absence of an independent human detector, generic not-animal rejections return NON_ANIMAL_DETECTED.
+        if animal_probability < self.config.animal_threshold:
             return AnimalnessGateResponse(
                 decision=GateDecision.REJECT,
                 predicted_species=predicted_species,
@@ -317,11 +323,11 @@ class AnimalnessGateService:
                 animal_probability=animal_probability,
                 model_name=self.MODEL_NAME,
                 model_version=self.MODEL_VERSION,
-                reason_code=reason,
+                reason_code=GateReasonCode.NON_ANIMAL_DETECTED,
                 error_code=None,
             ).model_dump()
 
-        # 6. Animal confirmed -> Verify species match (NEVER silently reroute)
+        # 7. Animal confirmed -> Verify species match (NEVER silently reroute)
         if predicted_species.lower() != clean_selected:
             return AnimalnessGateResponse(
                 decision=GateDecision.REJECT,
@@ -334,7 +340,7 @@ class AnimalnessGateService:
                 error_code=None,
             ).model_dump()
 
-        # 7. Species matched -> ACCEPT
+        # 8. Supported animal and species matched -> ACCEPT
         return AnimalnessGateResponse(
             decision=GateDecision.ACCEPT,
             predicted_species=predicted_species,

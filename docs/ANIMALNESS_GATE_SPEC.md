@@ -100,9 +100,14 @@ The system **never** silently reroutes the image to the Cat model.
 ## 5. Uncertainty & Configurable Thresholds
 
 Per PRD Section 9:
-- No arbitrary production confidence threshold is hard-coded into the service.
-- The service supports `AnimalnessGateConfig` with:
-  - `animal_threshold`: Optional decision threshold (defaults to standard argmax).
+- No arbitrary production confidence threshold is hard-coded into the service, and **no implicit fallback threshold (such as 0.50) is assumed**.
+- When `animal_threshold` is unconfigured (`animal_threshold = None`), the service returns `decision: "UNCERTAIN"` and `reason_code: "LOW_CONFIDENCE"` to prevent unapproved production acceptance or rejection.
+- When an explicit threshold is configured (`animal_threshold` is a float):
+  - Images below the threshold return `decision: "REJECT"` and `reason_code: "NON_ANIMAL_DETECTED"`.
+  - `HUMAN_DETECTED` is preserved in the schema contract for future independently established human detectors, but the binary gate does not pretend to identify humans specifically.
+  - Images at or above the threshold proceed to species validation.
+- Configurable parameters in `AnimalnessGateConfig`:
+  - `animal_threshold`: Explicit decision threshold.
   - `uncertainty_min` / `uncertainty_max`: Optional uncertainty interval mapping to `UNCERTAIN` / `LOW_CONFIDENCE`.
   - `species_confidence_threshold`: Optional species confidence gate.
 
