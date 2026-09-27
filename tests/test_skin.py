@@ -62,7 +62,31 @@ class FakeSkinModel:
         }
 
 
+class FakeGateService:
+    def validate(self, image, selected_species, **kwargs):
+        return {
+            "decision": "ACCEPT",
+            "predicted_species": selected_species,
+            "species_confidence": 0.99,
+            "animal_probability": 0.99,
+            "model_name": "EfficientNet-B0",
+            "model_version": "SCANAI-ANIMALNESS-GATE-V1",
+            "reason_code": "SUPPORTED_ANIMAL_DETECTED",
+            "error_code": None,
+        }
+
+
 class TestPredictRoute(unittest.IsolatedAsyncioTestCase):
+
+    def setUp(self):
+        self.gate_patcher = patch(
+            "app.routers.predict.get_animalness_gate_service",
+            return_value=FakeGateService(),
+        )
+        self.gate_patcher.start()
+
+    def tearDown(self):
+        self.gate_patcher.stop()
 
     async def test_dog_eye_route_preserves_insufficient_evidence_behavior(self):
         image = FakeUploadFile()
