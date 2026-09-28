@@ -295,7 +295,7 @@ class TestPredictRoute(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(Exception) as context:
             await predict(
                 image=image,
-                species="cat",
+                species="cattle",
                 body_area="eye",
             )
 

@@ -5,6 +5,7 @@ from PIL import Image, UnidentifiedImageError
 
 from animalness_gate.service import get_animalness_gate_service
 from app.services.body_area_router import route_body_area
+from app.services.cat_eye import CatEyeInvalidCropError, get_cat_eye_model
 from app.services.dog_eye import get_dog_eye_model
 from app.services.recommendation import build_recommendation
 from app.services.skin import get_skin_model
@@ -36,6 +37,7 @@ async def predict(
       6. Recommendation schema generation
     - Species and body area are explicitly supplied by the client.
     - Dog + eye routes to the frozen dog-eye-v1 model.
+    - Cat + eye routes to the frozen scanai_cat_eye_efficientnet_b0_v1 model.
     - Skin routes to the finalized SCANAI-SKIN-PHASE4B model.
     - Model output is transformed into the approved v1
       recommendation schema.
@@ -123,6 +125,36 @@ async def predict(
             raise HTTPException(
                 status_code=500,
                 detail=f"Dog eye inference failed: {exc}",
+            ) from exc
+
+        return build_recommendation(
+            routed_species,
+            routed_body_area,
+            result,
+        )
+
+    # --------------------------------------------------------
+    # Cat + Eye model routing
+    # --------------------------------------------------------
+
+    if (
+        routed_species == "cat"
+        and routed_body_area == "eye"
+    ):
+        try:
+            model = get_cat_eye_model()
+            result = model.predict(pil_image)
+
+        except (ValueError, CatEyeInvalidCropError) as exc:
+            raise HTTPException(
+                status_code=400,
+                detail=str(exc),
+            ) from exc
+
+        except Exception as exc:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Cat eye inference failed: {exc}",
             ) from exc
 
         return build_recommendation(
