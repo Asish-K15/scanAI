@@ -1,4 +1,4 @@
-﻿from app.services.fusion_urgency import determine_urgency
+from app.services.fusion_urgency import APPROVED_EVIDENCE_STATUSES, determine_urgency
 
 
 def build_recommendation(
@@ -9,6 +9,9 @@ def build_recommendation(
     severity=None,
     active_hemorrhage=False,
     low_risk_evidence=None,
+    observed_condition=None,
+    conflicts=None,
+    clinical_evidence=None,
 ):
     """
     Transform model output into the approved v1
@@ -32,19 +35,26 @@ def build_recommendation(
     confidence_level = model_result.get("confidence_level")
     uncertain = model_result.get("uncertain")
 
-    evidence_status = "insufficient_evidence"
+    # If observed_condition is provided from clinical evidence, use it for urgency rule evaluation
+    eval_condition = observed_condition or condition
 
     urgency = determine_urgency(
         severity=severity,
-        condition=condition,
+        condition=eval_condition,
         body_area=body_area,
         active_hemorrhage=active_hemorrhage,
         confidence_level=confidence_level,
-        evidence_status=evidence_status,
+        evidence_status=None,
         low_risk_evidence=low_risk_evidence,
+        conflicts=conflicts,
     )
 
-    if urgency == "Emergency":
+    if conflicts is not None and len(conflicts) > 0:
+        urgency = None
+        evidence_status = "insufficient_evidence"
+        recommendation_text = "conflicting evidence / urgency undefined"
+
+    elif urgency == "Emergency":
         evidence_status = "approved_urgency_evidence"
         recommendation_text = "emergency / immediate veterinary attention"
 
@@ -70,6 +80,12 @@ def build_recommendation(
         "engine": model_result.get("engine"),
         "screening_only": model_result.get("screening_only"),
     }
+
+    if conflicts is not None and len(conflicts) > 0:
+        evidence["conflicts"] = list(conflicts)
+
+    if clinical_evidence is not None:
+        evidence["clinical_evidence"] = clinical_evidence
 
     return {
         "species": species,

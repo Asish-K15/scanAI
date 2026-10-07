@@ -292,6 +292,42 @@ class TestPredictRoute(unittest.IsolatedAsyncioTestCase):
             "insufficient evidence / urgency undefined",
         )
 
+    async def test_invalid_active_hemorrhage_string_returns_400(self):
+        image = FakeUploadFile()
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="dog",
+                body_area="eye",
+                active_hemorrhage="garbage",
+            )
+        self.assertEqual(context.exception.status_code, 400)
+        self.assertIn("active_hemorrhage", str(context.exception.detail))
+
+    async def test_invalid_low_risk_evidence_string_returns_400(self):
+        image = FakeUploadFile()
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="dog",
+                body_area="eye",
+                low_risk_evidence="garbage",
+            )
+        self.assertEqual(context.exception.status_code, 400)
+        self.assertIn("low_risk_evidence", str(context.exception.detail))
+
+    async def test_invalid_severity_string_returns_400(self):
+        image = FakeUploadFile()
+        with self.assertRaises(Exception) as context:
+            await predict(
+                image=image,
+                species="dog",
+                body_area="eye",
+                severity="critical",
+            )
+        self.assertEqual(context.exception.status_code, 400)
+        self.assertIn("severity", str(context.exception.detail))
+
 
 if __name__ == "__main__":
     unittest.main()

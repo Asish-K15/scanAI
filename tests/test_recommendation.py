@@ -196,6 +196,41 @@ class TestRecommendation(unittest.TestCase):
             "severe",
         )
 
+    def test_conflicts_preserved_in_recommendation(self):
+        model_result = {
+            "condition": "skin__hotspot",
+            "confidence": 0.50,
+            "confidence_level": "low",
+            "uncertain": True,
+            "probabilities": {},
+            "model": "test-model",
+            "model_version": "test-v1",
+            "engine": "test",
+            "screening_only": True,
+        }
+
+        conflicts = ["signal A", "signal B"]
+        result = build_recommendation(
+            "dog",
+            "skin",
+            model_result,
+            conflicts=conflicts,
+        )
+
+        self.assertIsNone(result["urgency"])
+        self.assertEqual(
+            result["evidence_status"],
+            "insufficient_evidence",
+        )
+        self.assertEqual(
+            result["recommendation"],
+            "conflicting evidence / urgency undefined",
+        )
+        self.assertEqual(
+            result["evidence"]["conflicts"],
+            conflicts,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

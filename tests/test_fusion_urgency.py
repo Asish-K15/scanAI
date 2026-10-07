@@ -161,5 +161,61 @@ class TestFusionUrgency(unittest.TestCase):
             "Emergency",
         )
 
+    def test_approved_evidence_statuses(self):
+        from app.services.fusion_urgency import APPROVED_EVIDENCE_STATUSES
+
+        self.assertEqual(
+            APPROVED_EVIDENCE_STATUSES,
+            {
+                "approved_urgency_evidence",
+                "insufficient_evidence",
+            },
+        )
+
+    def test_conflicts_leave_urgency_undefined(self):
+        urgency = determine_urgency(
+            severity="severe",
+            condition="deep-tissue laceration",
+            active_hemorrhage=True,
+            conflicts=["conflicting report"],
+        )
+
+        self.assertIsNone(urgency)
+
+    def test_string_active_hemorrhage_does_not_trigger_emergency(self):
+        for bad_val in ("false", "true", "yes", 1, [True], {"active": True}):
+            urgency = determine_urgency(
+                severity="severe",
+                condition="deep-tissue laceration",
+                active_hemorrhage=bad_val,
+            )
+            self.assertIsNone(
+                urgency,
+                f"Non-boolean active_hemorrhage {bad_val!r} must not trigger Emergency.",
+            )
+
+    def test_string_low_risk_evidence_does_not_trigger_routine(self):
+        for bad_val in ("false", "true", "yes", 1, [True]):
+            urgency = determine_urgency(
+                low_risk_evidence=bad_val,
+            )
+            self.assertIsNone(
+                urgency,
+                f"Non-boolean low_risk_evidence {bad_val!r} must not trigger Routine.",
+            )
+
+    def test_invalid_severity_does_not_trigger_emergency(self):
+        for bad_sev in ("critical", "high", "unknown", 1, None):
+            urgency = determine_urgency(
+                severity=bad_sev,
+                condition="deep-tissue laceration",
+                active_hemorrhage=True,
+            )
+            self.assertIsNone(
+                urgency,
+                f"Invalid severity {bad_sev!r} must not trigger Emergency.",
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
