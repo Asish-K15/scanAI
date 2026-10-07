@@ -404,6 +404,106 @@ class TestCatEyeAPIIntegration(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(evidence["engine"], "PyTorch")
         self.assertTrue(evidence["screening_only"])
 
+        # Urgency/severity clinical boundary check
+        self.assertIsNone(result["severity"])
+        self.assertIsNone(result["urgency"])
+        self.assertEqual(result["evidence_status"], "insufficient_evidence")
+        self.assertEqual(result["recommendation"], "insufficient evidence / urgency undefined")
+
+    # ---------------------------------------------------------
+    # 16. Crop protection via API (<32x32 rejected before inference)
+    # ---------------------------------------------------------
+    async def test_16_cat_eye_crop_under_32x32_via_api_returns_400(self):
+        small_image = Image.new("RGB", (24, 24), "white")
+        upload_file = FakeUploadFile(small_image)
+
+        with patch(
+            "app.routers.predict.get_animalness_gate_service",
+            return_value=FakeGateService(decision="ACCEPT"),
+        ):
+            from fastapi import HTTPException
+            with self.assertRaises(HTTPException) as ctx:
+                await predict(
+                    image=upload_file,
+                    species="cat",
+                    body_area="eye",
+                )
+            self.assertEqual(ctx.exception.status_code, 400)
+            self.assertIn("32x32", str(ctx.exception.detail))
+
+    # ---------------------------------------------------------
+    # 17. Species mismatch (dog selected with cat image) never routes to Cat Eye
+    # ---------------------------------------------------------
+    async def test_17_selected_species_dog_with_cat_image_rejects_species_mismatch_and_never_routes_to_cat_eye(self):
+        cat_image = Image.new("RGB", (64, 64), "white")
+        upload_file = FakeUploadFile(cat_image)
+
+        mismatch_gate_response = {
+            "decision": "REJECT",
+            "predicted_species": "cat",
+            "species_confidence": 0.98,
+            "animal_probability": 0.99,
+            "model_name": "EfficientNet-B0",
+            "model_version": "SCANAI-ANIMALNESS-GATE-V1",
+            "reason_code": "SPECIES_MISMATCH",
+            "error_code": None,
+        }
+
+        mock_gate = MagicMock()
+        mock_gate.validate.return_value = mismatch_gate_response
+
+        with patch("app.routers.predict.get_animalness_gate_service", return_value=mock_gate):
+            with patch("app.routers.predict.get_cat_eye_model") as mock_cat_eye:
+                result = await predict(
+                    image=upload_file,
+                    species="dog",
+                    body_area="eye",
+                )
+                self.assertEqual(result["decision"], "REJECT")
+                self.assertEqual(result["reason_code"], "SPECIES_MISMATCH")
+                # Never silently reroute to Cat Eye
+                mock_cat_eye.assert_not_called()
+
+    # ---------------------------------------------------------
+    # 18. Clinical boundaries (high confidence never creates severity or urgency)
+    # ---------------------------------------------------------
+    async def test_18_cat_eye_clinical_boundaries_never_infer_urgency_or_severity(self):
+        valid_image = Image.new("RGB", (64, 64), "white")
+        upload_file = FakeUploadFile(valid_image)
+
+        fake_high_conf_result = {
+            "condition": "cornealulcer",
+            "confidence": 0.995,
+            "confidence_level": "high",
+            "uncertain": False,
+            "probabilities": {name: (0.995 if name == "cornealulcer" else 0.001) for name in CLASS_NAMES},
+            "model": "scanai_cat_eye_efficientnet_b0_v1",
+            "model_version": "v1.0.0",
+            "engine": "PyTorch",
+            "screening_only": True,
+        }
+
+        mock_model = MagicMock()
+        mock_model.predict.return_value = fake_high_conf_result
+
+        with patch(
+            "app.routers.predict.get_animalness_gate_service",
+            return_value=FakeGateService(decision="ACCEPT"),
+        ):
+            with patch("app.routers.predict.get_cat_eye_model", return_value=mock_model):
+                result = await predict(
+                    image=upload_file,
+                    species="cat",
+                    body_area="eye",
+                )
+
+        self.assertEqual(result["confidence"], 0.995)
+        self.assertEqual(result["confidence_level"], "high")
+        self.assertIsNone(result["severity"])
+        self.assertIsNone(result["urgency"])
+        self.assertEqual(result["evidence_status"], "insufficient_evidence")
+        self.assertEqual(result["recommendation"], "insufficient evidence / urgency undefined")
+
 
 if __name__ == "__main__":
     unittest.main()
