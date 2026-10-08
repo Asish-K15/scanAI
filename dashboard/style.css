@@ -796,6 +796,165 @@ body {
 
 
 /* --------------------------------------------------
+   Safety gate result
+-------------------------------------------------- */
+
+.gate-card.gate-reject-card {
+    border-top: 4px solid var(--danger);
+}
+
+.gate-card.gate-uncertain-card {
+    border-top: 4px solid var(--warning);
+}
+
+.gate-eyebrow-reject {
+    color: var(--danger);
+}
+
+.gate-eyebrow-uncertain {
+    color: var(--warning);
+}
+
+.gate-badge {
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    white-space: nowrap;
+}
+
+.gate-badge-reject {
+    background: #fee2e2;
+    color: var(--danger);
+    border: 1px solid #fecaca;
+}
+
+.gate-badge-uncertain {
+    background: #fef3c7;
+    color: var(--warning);
+    border: 1px solid #fde68a;
+}
+
+.gate-notice-box {
+    margin-top: 22px;
+
+    padding: 18px 20px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.gate-notice-icon {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    flex: 0 0 auto;
+}
+
+.gate-notice-reject {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: #991b1b;
+}
+
+.gate-notice-reject .gate-notice-icon {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.gate-notice-uncertain {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.gate-notice-uncertain .gate-notice-icon {
+    background: #fef3c7;
+    color: var(--warning);
+}
+
+.gate-notice-box strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.gate-notice-box p {
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    opacity: 0.95;
+}
+
+.gate-section-label {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    color: var(--muted);
+
+    margin-bottom: 6px;
+}
+
+.gate-explanation-box {
+    margin-top: 22px;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+    border: 1px solid var(--border);
+}
+
+.gate-explanation-box p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.gate-guidance-box {
+    margin-top: 16px;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+    border-left: 4px solid var(--primary);
+}
+
+.gate-guidance-box p {
+    font-size: 14px;
+    color: #1e3a8a;
+    line-height: 1.5;
+}
+
+
+/* --------------------------------------------------
    Footer
 -------------------------------------------------- */
 

@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/api/predict";
+const API_URL = "/api/predict";
 
 const form = document.getElementById("predictionForm");
 
@@ -48,6 +48,22 @@ const resultRecommendation = document.getElementById(
 const evidenceOutput = document.getElementById("evidenceOutput");
 
 const newScreeningButton = document.getElementById("newScreening");
+
+const gateResultCard = document.getElementById("gateResultCard");
+const gateEyebrow = document.getElementById("gateEyebrow");
+const gateTitle = document.getElementById("gateTitle");
+const gateDecisionBadge = document.getElementById("gateDecisionBadge");
+const gateNoticeBox = document.getElementById("gateNoticeBox");
+const gateNoticeIcon = document.getElementById("gateNoticeIcon");
+const gateNoticeHeadline = document.getElementById("gateNoticeHeadline");
+const gateNoticeDescription = document.getElementById("gateNoticeDescription");
+const gateDecision = document.getElementById("gateDecision");
+const gateReasonCode = document.getElementById("gateReasonCode");
+const gatePredictedSpecies = document.getElementById("gatePredictedSpecies");
+const gateModelVersion = document.getElementById("gateModelVersion");
+const gateReasonMessage = document.getElementById("gateReasonMessage");
+const gateEvidenceOutput = document.getElementById("gateEvidenceOutput");
+const gateNewScreeningButton = document.getElementById("gateNewScreening");
 
 let selectedFile = null;
 
@@ -115,6 +131,48 @@ function getConfidenceClass(level) {
 }
 
 
+function formatReasonCode(code) {
+    if (!code) {
+        return "Not available";
+    }
+
+    return String(code).trim();
+}
+
+
+function getReasonExplanation(reasonCode, decision) {
+    if (!reasonCode) {
+        return decision === "REJECT"
+            ? "The uploaded image did not pass the safety gate criteria. Disease analysis was halted."
+            : "The safety gate could not confirm image validity with sufficient confidence. Disease analysis was halted.";
+    }
+
+    const code = String(reasonCode).trim();
+    const normalized = code.toUpperCase();
+
+    switch (normalized) {
+        case "NON_ANIMAL_DETECTED":
+            return "No domestic animal was detected in the uploaded image. ScanAI only processes animal images.";
+        case "HUMAN_DETECTED":
+            return "A human subject was detected in the image. ScanAI is strictly restricted to animal health screening.";
+        case "SPECIES_MISMATCH":
+            return "The animal species detected in the image does not match the species selected in the screening form.";
+        case "LOW_CONFIDENCE":
+            return "Safety gate verification confidence is below the approved threshold to proceed with disease analysis.";
+        case "UNSUPPORTED_SPECIES":
+            return "The selected or detected animal species is not supported for clinical screening.";
+        case "INVALID_IMAGE":
+            return "The uploaded image file is invalid, corrupted, or cannot be processed.";
+        case "MODEL_ERROR":
+            return "An internal error occurred during safety gate verification.";
+        case "UNCERTAIN":
+            return "The safety gate was unable to conclusively verify animalness or species.";
+        default:
+            return `Safety gate validation halted with reason code: ${code}.`;
+    }
+}
+
+
 /* --------------------------------------------------
    Error handling
 -------------------------------------------------- */
@@ -123,6 +181,8 @@ function showError(message) {
     errorText.textContent = message;
 
     show(errorMessage);
+    hide(resultCard);
+    hide(gateResultCard);
 }
 
 
@@ -332,9 +392,85 @@ function displayResult(data) {
     }
 
 
+    hide(gateResultCard);
     show(resultCard);
 
     resultCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+/* --------------------------------------------------
+   Display safety gate result
+-------------------------------------------------- */
+
+function displayGateResult(data) {
+    hide(resultCard);
+    clearError();
+
+    const decisionUpper =
+        typeof data.decision === "string"
+            ? data.decision.toUpperCase()
+            : "REJECT";
+
+    const isReject = decisionUpper === "REJECT";
+
+    if (isReject) {
+        gateResultCard.classList.remove("gate-uncertain-card");
+        gateResultCard.classList.add("gate-reject-card");
+
+        gateEyebrow.textContent = "SAFETY GATE REJECTION";
+        gateEyebrow.className = "eyebrow gate-eyebrow gate-eyebrow-reject";
+
+        gateTitle.textContent = "Analysis Stopped — Image Rejected";
+
+        gateDecisionBadge.textContent = "REJECT";
+        gateDecisionBadge.className = "gate-badge gate-badge-reject";
+
+        gateNoticeBox.className = "gate-notice-box gate-notice-reject";
+        gateNoticeIcon.textContent = "✕";
+        gateNoticeHeadline.textContent = "ScanAI stopped the analysis";
+        gateNoticeDescription.textContent =
+            "The image did not pass the animal/species safety gate. Disease screening was not performed.";
+    } else {
+        gateResultCard.classList.remove("gate-reject-card");
+        gateResultCard.classList.add("gate-uncertain-card");
+
+        gateEyebrow.textContent = "SAFETY GATE UNCERTAIN";
+        gateEyebrow.className = "eyebrow gate-eyebrow gate-eyebrow-uncertain";
+
+        gateTitle.textContent = "Analysis Stopped — Gate Uncertain";
+
+        gateDecisionBadge.textContent = "UNCERTAIN";
+        gateDecisionBadge.className = "gate-badge gate-badge-uncertain";
+
+        gateNoticeBox.className = "gate-notice-box gate-notice-uncertain";
+        gateNoticeIcon.textContent = "!";
+        gateNoticeHeadline.textContent = "ScanAI stopped the analysis";
+        gateNoticeDescription.textContent =
+            "The safety gate could not confirm with sufficient confidence that the image contains a supported animal/species.";
+    }
+
+    gateDecision.textContent = formatValue(data.decision);
+    gateReasonCode.textContent = formatReasonCode(data.reason_code);
+    gatePredictedSpecies.textContent = formatValue(data.predicted_species);
+    gateModelVersion.textContent =
+        data.model_version || data.model_name || "SCANAI-ANIMALNESS-GATE-V1";
+
+    gateReasonMessage.textContent = getReasonExplanation(
+        data.reason_code,
+        decisionUpper
+    );
+
+    if (gateEvidenceOutput) {
+        gateEvidenceOutput.textContent = JSON.stringify(data, null, 2);
+    }
+
+    show(gateResultCard);
+
+    gateResultCard.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
@@ -350,6 +486,7 @@ async function submitPrediction() {
     clearError();
 
     hide(resultCard);
+    hide(gateResultCard);
 
     if (!selectedFile) {
         showError("Please upload an animal image.");
@@ -435,7 +572,16 @@ async function submitPrediction() {
         }
 
 
-        displayResult(data);
+        const decision =
+            typeof data.decision === "string"
+                ? data.decision.toUpperCase()
+                : null;
+
+        if (decision === "REJECT" || decision === "UNCERTAIN") {
+            displayGateResult(data);
+        } else {
+            displayResult(data);
+        }
 
     } catch (error) {
 
@@ -472,21 +618,27 @@ form.addEventListener("submit", async (event) => {
    New screening
 -------------------------------------------------- */
 
-newScreeningButton.addEventListener("click", () => {
-
+function resetScreening() {
     form.reset();
 
     clearSelectedImage();
     clearError();
 
     hide(resultCard);
+    hide(gateResultCard);
     hide(loading);
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
-});
+}
+
+newScreeningButton.addEventListener("click", resetScreening);
+
+if (gateNewScreeningButton) {
+    gateNewScreeningButton.addEventListener("click", resetScreening);
+}
 
 
 /* --------------------------------------------------
@@ -496,3 +648,4 @@ newScreeningButton.addEventListener("click", () => {
 hide(loading);
 hide(errorMessage);
 hide(resultCard);
+hide(gateResultCard);

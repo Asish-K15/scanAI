@@ -69,6 +69,7 @@
                             <option value="">Select species</option>
                             <option value="dog">Dog</option>
                             <option value="cat">Cat</option>
+                            <option value="cattle">Cattle</option>
                         </select>
                     </div>
 
@@ -178,6 +179,117 @@
                     Something went wrong.
                 </p>
             </div>
+        </section>
+
+
+        <section
+            id="gateResultCard"
+            class="result-card gate-card hidden"
+        >
+
+            <div class="result-header">
+
+                <div>
+                    <span id="gateEyebrow" class="eyebrow gate-eyebrow">SAFETY GATE</span>
+
+                    <h3 id="gateTitle">
+                        Analysis Stopped
+                    </h3>
+                </div>
+
+                <span
+                    id="gateDecisionBadge"
+                    class="gate-badge"
+                >
+                    —
+                </span>
+
+            </div>
+
+
+            <div class="gate-notice-box" id="gateNoticeBox">
+
+                <div class="gate-notice-icon" id="gateNoticeIcon">!</div>
+
+                <div>
+                    <strong id="gateNoticeHeadline">
+                        ScanAI stopped the analysis
+                    </strong>
+
+                    <p id="gateNoticeDescription">
+                        The uploaded image did not pass the animal/species safety gate.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="result-grid gate-grid">
+
+                <div class="result-item">
+                    <span>Gate Decision</span>
+                    <strong id="gateDecision">—</strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Reason Code</span>
+                    <strong id="gateReasonCode">—</strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Detected Species</span>
+                    <strong id="gatePredictedSpecies">—</strong>
+                </div>
+
+                <div class="result-item">
+                    <span>Safety Gate Model</span>
+                    <strong id="gateModelVersion">—</strong>
+                </div>
+
+            </div>
+
+
+            <div class="gate-explanation-box">
+
+                <span class="gate-section-label">Safety Gate Assessment</span>
+
+                <p id="gateReasonMessage">
+                    —
+                </p>
+
+            </div>
+
+
+            <div class="gate-guidance-box">
+
+                <span class="gate-section-label">Required Action</span>
+
+                <p id="gateGuidanceText">
+                    Please upload a clear, focused photograph of a supported domestic animal (dog, cat, or cattle) with the matching species selected.
+                </p>
+
+            </div>
+
+
+            <details class="evidence-details">
+
+                <summary>
+                    View safety gate response
+                </summary>
+
+                <pre id="gateEvidenceOutput"></pre>
+
+            </details>
+
+
+            <button
+                type="button"
+                id="gateNewScreening"
+                class="secondary-button"
+            >
+                Start New Screening
+            </button>
+
         </section>
 
 
