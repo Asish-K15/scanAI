@@ -81,3 +81,41 @@ Colab baseline training notebook — don't wait for every class to hit
 "excellent" tier first. Train early on what you have, then come back and
 top up the weakest classes based on where the trained model actually
 struggles.
+
+## FMD/LSD Exact Duplicate Audit
+
+The audit identified one exact cross-class duplicate inherited from the upstream dataset. Both copies are confined to the training partition, and neither appears in validation or test. Therefore, this finding does not constitute demonstrated train/test leakage. The frozen production checkpoint and inference service remain unchanged and operational. The duplicate represents a documented upstream training-data label conflict and should remain recorded as a dataset-quality limitation.
+
+### Audit Findings
+
+1. **Exact Duplicate Identity & Filename:**
+   - Filename: `kaggle__devang03mgr__cattle-diseases-datasets__img1025.jpg`
+   - SHA-256: `40297a67657fe947e7837ea49ef20bc5613118c175b2fa87e74bbd90b8874505`
+
+2. **Upstream Source:**
+   - Source paths in upstream dataset:
+     - `Cows datasets/foot-and-mouth/img1025.jpg`
+     - `Cows datasets/lumpy/img1025.jpg`
+   - Upstream dataset: `devang03mgr/cattle-diseases-datasets` (Kaggle)
+
+3. **Repository Metadata Representation:**
+   The duplicate is tracked in:
+   - `dataset_manager/metadata/duplicates.csv`
+   - `dataset_manager/metadata/duplicate_clusters.csv`
+   - `dataset_manager/metadata/cleanup_manifest.csv`
+   - `dataset_manager/metadata/cross_class_quarantine.csv`
+
+4. **Partition Placement & Absence from Validation/Test:**
+   - `dataset_manager/metadata/split_manifest.csv` places both copies in the `train` partition (`skin__foot_and_mouth_disease` and `skin__lumpy_skin_disease`).
+   - Neither copy appears in the validation partition (`dataset_manager/training/outputs/phase4c/validation_predictions.csv`).
+   - Neither copy appears in the test partition; Phase 4D `test_predictions.csv` contains zero occurrences of `img1025.jpg`.
+
+5. **Train/Test Leakage & Production Status:**
+   - Because neither copy appears in validation or test, this finding does **not** demonstrate train/test leakage.
+   - Foot-and-mouth disease (`skin__foot_and_mouth_disease`) and lumpy skin disease (`skin__lumpy_skin_disease`) remain active classes in the current 10-class Skin model.
+   - The frozen production checkpoint remains unchanged: `dataset_manager/training/outputs/phase4_final/scanai_skin_phase4b.onnx`.
+   - The production Skin inference service (`app/services/skin.py`) remains unchanged and operational.
+
+6. **Dataset-Quality Scope & Source Verification:**
+   - The duplicate represents a documented upstream training-data label conflict and should remain recorded as a dataset-quality limitation.
+   - Upstream dataset provenance, source authenticity, and licensing verification remain a separate tracking process.
